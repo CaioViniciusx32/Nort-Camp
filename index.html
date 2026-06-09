@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nort Camp</title>
+    <title>Nort Camp - Pro Esports Platform</title>
     <style>
         :root {
-            --bg-principal: #0b0e14;
-            --bg-card: #151a26;
-            --bg-input: #1f2636;
+            --bg-principal: #07090e;
+            --bg-card: #111622;
+            --bg-input: #1b2234;
             --primary: #00f2fe;
             --secondary: #4facfe;
             --accent: #e94560;
+            --success: #00e676;
             --text: #ffffff;
-            --text-muted: #8b9bb4;
+            --text-muted: #708099;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -29,77 +30,80 @@
         .header-buttons { position: absolute; right: 10px; top: 10px; display: flex; gap: 10px; }
         .view-toggle-btn { background: var(--bg-card); border: 1px solid var(--secondary); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
         .view-toggle-btn:hover { background: var(--secondary); color: var(--bg-principal); }
-        .export-btn { background: #28a745; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-        .export-btn:hover { background: #218838; }
+        .export-btn { background: var(--success); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
+        .export-btn:hover { opacity: 0.9; }
 
-        /* Navegação e Abas */
+        /* Abas */
         .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; border-bottom: 2px solid var(--bg-card); padding-bottom: 15px; }
         .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: 600; cursor: pointer; padding: 8px 16px; transition: 0.3s; }
         .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-        .tab-content { display: none; max-width: 1200px; margin: 0 auto; }
+        .tab-content { display: none; max-width: 1400px; margin: 0 auto; }
         .tab-content.active { display: block; }
 
-        /* Formulários e Containers */
+        /* Grid e Cards */
         .grid-cadastro { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-        .card { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
-        h2 { font-size: 1.4rem; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); margin-bottom: 25px; }
+        h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; border-left: 4px solid var(--primary); padding-left: 10px; }
         
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
-        input, select { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; font-size: 14px; }
-        input[type="file"] { padding: 5px; background: none; border: none; color: var(--text-muted); }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        input, select { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; font-size: 14px; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 8px rgba(0, 242, 254, 0.2); }
         
-        .btn-submit { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; }
+        .btn-submit { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; text-transform: uppercase; font-size: 0.9rem; }
         .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-danger { background: var(--accent) !important; color: white !important; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-        /* Lista de Times e Jogadores */
-        .items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .team-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; border-top: 4px solid var(--secondary); }
-        .team-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); }
-        .team-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #2a354d; border: 2px solid var(--secondary); }
-        .player-row { display: flex; align-items: center; gap: 10px; padding: 10px 15px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .player-photo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #2a354d; }
+        /* Lista de Times */
+        .items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .team-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative; }
+        .team-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.01); }
+        .team-logo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #2a354d; border: 2px solid var(--secondary); }
+        .player-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 15px; border-top: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; }
+        .player-info { display: flex; align-items: center; gap: 10px; }
+        .player-photo { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: #2a354d; }
+        .delete-team-btn { position: absolute; right: 15px; top: 22px; background: none; border: none; color: var(--accent); cursor: pointer; font-weight: bold; font-size: 0.85rem; }
 
-        /* Chaveamento Dinâmico (Bracket) */
-        .bracket-wrapper { display: flex; gap: 40px; overflow-x: auto; padding: 20px 0; justify-content: flex-start; align-items: center; }
-        .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 220px; height: 650px; }
-        .round-title { text-align: center; color: var(--primary); font-weight: bold; margin-bottom: 15px; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+        /* Chaveamento Pro (Bracket) */
+        .bracket-wrapper { display: flex; gap: 50px; overflow-x: auto; padding: 20px 0; }
+        .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 260px; height: 700px; }
+        .round-title { text-align: center; color: var(--primary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase; font-size: 12px; letter-spacing: 2px; background: rgba(0,242,254,0.05); padding: 5px; border-radius: 4px; }
         
-        .matchup { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; margin: 15px 0; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .matchup-team { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; background: var(--bg-input); margin: 4px 0; border-radius: 4px; font-size: 13px; }
+        .matchup { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px; margin: 15px 0; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .match-status { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .status-live { color: var(--accent) !important; animation: pulse 1.5s infinite; }
+        .matchup-team { display: flex; align-items: center; justify-content: space-between; padding: 8px; background: var(--bg-input); margin: 4px 0; border-radius: 5px; font-size: 13px; }
         .matchup-team img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-right: 8px; }
-        .matchup-team-info { display: flex; align-items: center; }
-        .matchup-score { width: 35px; background: var(--bg-principal); border: 1px solid var(--secondary); color: #fff; text-align: center; border-radius: 4px; font-weight: bold; font-size: 13px; }
-        .btn-action { width: 100%; background: var(--accent); border: none; color: white; font-size: 11px; padding: 4px; margin-top: 5px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-
-        /* Tabela de Classificação */
-        .table-container { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; }
-        th, td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { background-color: rgba(255,255,255,0.02); color: var(--primary); font-size: 13px; text-transform: uppercase; }
+        .matchup-score { width: 38px; background: var(--bg-principal); border: 1px solid var(--secondary); color: #fff; text-align: center; border-radius: 4px; font-weight: bold; padding: 2px; }
         
+        /* Tabela */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 14px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: left; }
+        th { background-color: rgba(255,255,255,0.01); color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Logs Auditoria */
+        .log-box { max-height: 150px; overflow-y: auto; background: var(--bg-input); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; color: var(--text-muted); }
+        .log-item { margin-bottom: 4px; border-left: 2px solid var(--secondary); padding-left: 6px; }
+
+        /* Visões Condicionais */
         .admin-only { display: block; }
         body.public-mode .admin-only { display: none !important; }
         body.public-mode .matchup-score { pointer-events: none; border-color: transparent; background: transparent; }
+        body.public-mode .delete-team-btn { display: none; }
 
-        /* ==================== REGRAS DE IMPRESSÃO (EXPORTAR DOCUMENTO) ==================== */
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
         @media print {
-            body { background: #fff !important; color: #000 !important; padding: 0; }
-            header, .tabs, .admin-only, .btn-action, .header-buttons, .view-toggle-btn { display: none !important; }
-            .tab-content { display: block !important; opacity: 1 !important; }
-            .card { background: #fff !important; border: none !important; box-shadow: none !important; color: #000 !important; padding: 0; margin-bottom: 30px; }
-            th { background: #f0f0f0 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
-            td { border-bottom: 1px solid #ccc !important; color: #000 !important; }
-            h2 { color: #000 !important; border-bottom: 2px solid #000; padding-bottom: 5px; margin-top: 20px; }
-            .team-card { border: 1px solid #ccc !important; background: #fff !important; page-break-inside: avoid; }
-            .matchup { border: 1px solid #000 !important; background: #fff !important; color: #000 !important; }
-            .matchup-team { background: #f9f9f9 !important; color: #000 !important; }
+            body { background: #fff !important; color: #000 !important; }
+            header, .tabs, .admin-only, .header-buttons { display: none !important; }
+            .tab-content { display: block !important; }
+            .card { background: #fff !important; color: #000 !important; box-shadow: none !important; }
+            th { background: #f0f0f0 !important; color: #000 !important; }
+            td { color: #000 !important; border-bottom: 1px solid #ccc !important; }
+            .team-card, .matchup { border: 1px solid #000 !important; background: #fff !important; color: #000 !important; }
+            .matchup-team { background: #f5f5f5 !important; color: #000 !important; }
             .matchup-score { background: #fff !important; color: #000 !important; border: 1px solid #000 !important; }
-            .bracket-wrapper { display: block !important; }
-            .bracket-round { height: auto !important; margin-bottom: 30px; page-break-inside: avoid; }
-            .round-title { color: #000 !important; text-align: left; border-bottom: 1px solid #000; }
-            /* Força a criação de uma folha de rosto bonita */
-            .print-header { display: block !important; text-align: center; margin-bottom: 40px; border-bottom: 3px double #000; padding-bottom: 10px; }
+            .print-header { display: block !important; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
         }
         .print-header { display: none; }
     </style>
@@ -107,64 +111,95 @@
 <body>
 
     <div class="print-header">
-        <h1 style="font-size: 28px; text-transform: uppercase;">Relatório Oficial do Torneio - Nort Camp</h1>
-        <p style="font-size: 14px; margin-top: 5px;">Documento gerado em tempo real contendo classificação geral e chaves finais.</p>
+        <h1>NORT CAMP - RELATÓRIO DO EVENTO</h1>
+        <p>Plataforma Profissional de Gestão de Torneios de Jogos</p>
     </div>
 
     <header>
         <h1>⚡ Nort Camp</h1>
         <div id="modeIndicator" class="mode-badge mode-admin">Painel do Administrador</div>
         <div class="header-buttons">
-            <button class="export-btn" onclick="exportarDocumento()">📄 Exportar Relatório</button>
+            <button class="export-btn" onclick="exportarDocumento()">📄 Relatório PDF</button>
             <button class="view-toggle-btn" onclick="toggleViewMode()" id="toggleBtn">Visão do Público</button>
         </div>
     </header>
 
     <div class="tabs">
-        <button class="tab-btn active" id="tabBtnCadastro" onclick="switchTab('cadastro')">Equipes & Elencos</button>
-        <button class="tab-btn" onclick="switchTab('classificacao')">Classificação Geral</button>
-        <button class="tab-btn" onclick="switchTab('fase-mata')">Chaveamento do Torneio</button>
+        <button class="tab-btn active" id="tabBtnCadastro" onclick="switchTab('cadastro')">Inscrições & Equipes</button>
+        <button class="tab-btn" onclick="switchTab('classificacao')">Tabela Geral</button>
+        <button class="tab-btn" onclick="switchTab('fase-mata')">Chaveamento Ao Vivo</button>
     </div>
 
+    <!-- ABA 1: CADASTRO -->
     <div id="cadastro" class="tab-content active">
         <div class="grid-cadastro" id="cadastroGrid">
-            <div class="card admin-only">
-                <h2>📝 Registrar Time</h2>
-                <div class="form-group">
-                    <label>Nome do Time</label>
-                    <input type="text" id="teamName" placeholder="Ex: Nort Club">
-                </div>
-                <div class="form-group">
-                    <label>Enviar Escudo / Logo (Do Computador)</label>
-                    <input type="file" id="teamLogoFile" accept="image/*">
-                </div>
-                
-                <h3 style="font-size:1rem; margin: 15px 0 10px 0; color: var(--secondary);">Jogadores do Elenco</h3>
-                <div id="playersInputs">
-                    <div class="player-input-block" style="border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 10px;">
-                        <div class="form-group">
-                            <input type="text" class="playerName" placeholder="Nome do Jogador">
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size: 0.8rem;">Foto do Jogador:</label>
-                            <input type="file" class="playerPhotoFile" accept="image/*">
-                        </div>
+            
+            <div class="admin-only">
+                <!-- Informações do Evento -->
+                <div class="card">
+                    <h2>🎮 Configuração do Evento</h2>
+                    <div class="form-group">
+                        <label>Título do Jogo / Evento</label>
+                        <input type="text" id="gameTitle" value="Campeonato de Valorant" onchange="updateEventMeta()">
+                    </div>
+                    <div class="form-group">
+                        <label>Premiação Total</label>
+                        <input type="text" id="prizePool" value="R$ 5.000,00" onchange="updateEventMeta()">
                     </div>
                 </div>
-                <button class="btn-submit" style="background:none; border: 1px dashed var(--secondary); color: var(--secondary); margin-bottom:15px;" onclick="addPlayerField()">+ Adicionar Próximo Jogador</button>
-                <button class="btn-submit" onclick="saveTeam()">Salvar Equipe Completa</button>
+
+                <!-- Cadastro de Times -->
+                <div class="card">
+                    <h2>📝 Inscrição de Equipe</h2>
+                    <div class="form-group">
+                        <label>Nome da Organização/Time</label>
+                        <input type="text" id="teamName" placeholder="Ex: Nort Gaming">
+                    </div>
+                    <div class="form-group">
+                        <label>Escudo do Time (Do Computador)</label>
+                        <input type="file" id="teamLogoFile" accept="image/*">
+                    </div>
+                    
+                    <h3 style="font-size:0.9rem; margin: 15px 0 10px 0; color: var(--secondary); text-transform: uppercase;">Membros da Line-up</h3>
+                    <div id="playersInputs">
+                        <div class="player-input-block" style="background: rgba(255,255,255,0.01); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                            <div class="form-group">
+                                <input type="text" class="playerName" placeholder="Nickname do Player">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="font-size: 0.75rem;">Foto de Perfil:</label>
+                                <input type="file" class="playerPhotoFile" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-submit" style="background:none; border: 1px dashed var(--secondary); color: var(--secondary); margin-bottom:15px; font-size: 12px; padding: 6px;" onclick="addPlayerField()">+ Slot de Jogador</button>
+                    <button class="btn-submit" onclick="saveTeam()">Finalizar Inscrição</button>
+                </div>
+
+                <!-- Audit Logs -->
+                <div class="card">
+                    <h2>📋 Histórico da Plataforma</h2>
+                    <div class="log-box" id="logBox"></div>
+                </div>
             </div>
 
+            <!-- Dashboard de Times -->
             <div id="teamsDisplaySection" style="grid-column: span 2;">
-                <h2>👥 Equipes Confirmadas (<span id="teamCount">0</span>)</h2>
+                <div class="card" style="margin-bottom: 20px; display: flex; gap: 30px; background: linear-gradient(135deg, #111622, #1b2234);">
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Jogo Oficial:</span> <h3 id="metaGame">Campeonato de Valorant</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Premiação:</span> <h3 id="metaPrize" style="color: var(--success);">R$ 5.000,00</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Vagas Preenchidas:</span> <h3 style="color: var(--primary);"><span id="teamCount">0</span> Cadastrados</h3></div>
+                </div>
+                <h2>👥 Organizações e Atletas Confirmados</h2>
                 <div class="items-list" id="teamsDisplay"></div>
             </div>
         </div>
     </div>
 
+    <!-- ABA 2: CLASSIFICAÇÃO -->
     <div id="classificacao" class="tab-content">
         <div class="card">
-            <h2>📊 Classificação e Pontuação</h2>
+            <h2>📊 Leaderboard Pro (Pontuação Acumulada)</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -174,9 +209,8 @@
                             <th>Pts</th>
                             <th>J</th>
                             <th>V</th>
-                            <th>E</th>
                             <th>D</th>
-                            <th>GP</th>
+                            <th>GP (Gols/Rounds Pró)</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody"></tbody>
@@ -185,24 +219,25 @@
         </div>
     </div>
 
+    <!-- ABA 3: MATA-MATA -->
     <div id="fase-mata" class="tab-content">
         <div class="card admin-only" style="margin-bottom: 20px;">
-            <h2>⚡ Sorteador de Chaves</h2>
+            <h2>🎲 Sorteador Algorítmico de Chaves</h2>
             <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                <label for="bracketSize">Tamanho do Campeonato:</label>
+                <label>Formato do Chaveamento:</label>
                 <select id="bracketSize" style="width: 230px;">
-                    <option value="16">Oitavas de Final (16 times)</option>
-                    <option value="8">Quartas de Final (8 times)</option>
-                    <option value="4">Semifinais (4 times)</option>
+                    <option value="16">Oitavas de Final (16 Pró-Teams)</option>
+                    <option value="8">Quartas de Final (8 Pró-Teams)</option>
+                    <option value="4">Semifinais (4 Pró-Teams)</option>
                 </select>
-                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 10px 25px; margin-top:0;">Sortear e Bloquear Chaves</button>
+                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 10px 25px; margin-top:0;">Realizar Sorteio Aleatório</button>
             </div>
         </div>
 
         <div class="card">
-            <h2>🏆 Chaves Finais</h2>
+            <h2>🏆 Árvore do Torneio</h2>
             <div class="bracket-wrapper" id="bracketContainer">
-                <p style="color: var(--text-muted);">O chaveamento ainda não foi gerado pelo administrador do torneio.</p>
+                <p style="color: var(--text-muted);">Aguardando sorteio oficial das chaves pelo organizador.</p>
             </div>
         </div>
     </div>
@@ -211,15 +246,31 @@
         const DEFAULT_LOGO = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=100&q=80"; 
         const DEFAULT_PLAYER = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"; 
 
-        let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_data')) || {
+        let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_pro_data')) || {
+            meta: { game: "Campeonato de Valorant", prize: "R$ 5.000,00" },
             teams: [],
             bracket: null,
             stats: {},
+            logs: [],
             currentMode: 'admin'
         };
 
         function saveState() {
-            localStorage.setItem('nort_camp_data', JSON.stringify(APP_STATE));
+            localStorage.setItem('nort_camp_pro_data', JSON.stringify(APP_STATE));
+        }
+
+        function pushLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            APP_STATE.logs.unshift(`[${timestamp}] ${message}`);
+            saveState();
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const box = document.getElementById('logBox');
+            if(box) {
+                box.innerHTML = APP_STATE.logs.map(log => `<div class="log-item">${log}</div>`).join('');
+            }
         }
 
         function fileToBase64(file) {
@@ -229,6 +280,20 @@
                 reader.readAsDataURL(file);
                 reader.onload = () => resolve(reader.result);
             });
+        }
+
+        function updateEventMeta() {
+            APP_STATE.meta.game = document.getElementById('gameTitle').value;
+            APP_STATE.meta.prize = document.getElementById('prizePool').value;
+            saveState();
+            renderMeta();
+        }
+
+        function renderMeta() {
+            document.getElementById('metaGame').innerText = APP_STATE.meta.game;
+            document.getElementById('metaPrize').innerText = APP_STATE.meta.prize;
+            document.getElementById('gameTitle').value = APP_STATE.meta.game;
+            document.getElementById('prizePool').value = APP_STATE.meta.prize;
         }
 
         function toggleViewMode() {
@@ -244,7 +309,7 @@
 
             if (APP_STATE.currentMode === 'publico') {
                 body.classList.add('public-mode');
-                badge.innerText = "Visão do Público (Apenas Leitura)";
+                badge.innerText = "Modo de Transmissão / Público";
                 badge.className = "mode-badge mode-publico";
                 btn.innerText = "Modo Admin";
                 if(cadastroGrid) cadastroGrid.style.gridTemplateColumns = "1fr";
@@ -255,9 +320,10 @@
                 badge.className = "mode-badge mode-admin";
                 btn.innerText = "Visão do Público";
                 if(cadastroGrid) cadastroGrid.style.gridTemplateColumns = "1fr 2fr";
-                document.getElementById('tabBtnCadastro').innerText = "Inscrições & Elencos";
+                document.getElementById('tabBtnCadastro').innerText = "Inscrições & Equipes";
             }
             renderBracket(); 
+            renderTeams();
         }
 
         function switchTab(tabId) {
@@ -274,15 +340,16 @@
             const container = document.getElementById('playersInputs');
             const div = document.createElement('div');
             div.className = 'player-input-block';
-            div.style.borderBottom = "1px dashed rgba(255,255,255,0.05)";
-            div.style.paddingBottom = "10px";
+            div.style.background = "rgba(255,255,255,0.01)";
+            div.style.padding = "10px";
+            div.style.borderRadius = "6px";
             div.style.marginBottom = "10px";
             div.innerHTML = `
                 <div class="form-group">
-                    <input type="text" class="playerName" placeholder="Nome do Jogador">
+                    <input type="text" class="playerName" placeholder="Nickname do Player">
                 </div>
-                <div class="form-group">
-                    <label style="font-size: 0.8rem;">Foto do Jogador:</label>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size: 0.75rem;">Foto de Perfil:</label>
                     <input type="file" class="playerPhotoFile" accept="image/*">
                 </div>
             `;
@@ -291,7 +358,7 @@
 
         async function saveTeam() {
             const name = document.getElementById('teamName').value.trim();
-            if(!name) return alert("Preencha o nome do time.");
+            if(!name) return alert("Insira o nome do time.");
 
             const logoFileInput = document.getElementById('teamLogoFile').files[0];
             const logoBase64 = logoFileInput ? await fileToBase64(logoFileInput) : DEFAULT_LOGO;
@@ -305,33 +372,55 @@
                 
                 if(pName) {
                     const pPhotoBase64 = pFile ? await fileToBase64(pFile) : DEFAULT_PLAYER;
-                    players.push({ name: pName, photo: pPhotoBase64 });
+                    players.push({ id: 'p_' + Math.random().toString(36).substr(2, 9), name: pName, photo: pPhotoBase64 });
                 }
             }
 
             if(players.length === 0) {
-                players = [{ name: "Jogador Inscrito", photo: DEFAULT_PLAYER }];
+                players = [{ id: 'p_default', name: "Player Sub", photo: DEFAULT_PLAYER }];
             }
 
             const newTeam = { id: 't_' + Date.now(), name, logo: logoBase64, players };
             APP_STATE.teams.push(newTeam);
-            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, e: 0, d: 0, gp: 0 };
+            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, d: 0, gp: 0 };
 
-            saveState();
+            pushLog(`Equipe registrada com sucesso: ${name} (${players.length} atletas)`);
             clearRegisterForm();
             renderTeams();
+        }
+
+        // ====== EXCLUSÃO DE TIME ======
+        function deleteTeam(teamId, teamName) {
+            if(confirm(`Tem certeza que deseja banir/excluir a organização "${teamName}" do evento?`)) {
+                APP_STATE.teams = APP_STATE.teams.filter(t => t.id !== teamId);
+                delete APP_STATE.stats[teamId];
+                pushLog(`Organização excluída: ${teamName}`);
+                renderTeams();
+            }
+        }
+
+        // ====== EXCLUSÃO DE JOGADOR ======
+        function deletePlayer(teamId, playerId, playerName) {
+            if(confirm(`Remover o atleta "${playerName}" desta equipe?`)) {
+                const team = APP_STATE.teams.find(t => t.id === teamId);
+                if(team) {
+                    team.players = team.players.filter(p => p.id !== playerId);
+                    pushLog(`Atleta ${playerName} removido da equipe ${team.name}`);
+                    renderTeams();
+                }
+            }
         }
 
         function clearRegisterForm() {
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogoFile').value = '';
             document.getElementById('playersInputs').innerHTML = `
-                <div class="player-input-block" style="border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 10px;">
+                <div class="player-input-block" style="background: rgba(255,255,255,0.01); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                     <div class="form-group">
-                        <input type="text" class="playerName" placeholder="Nome do Jogador">
+                        <input type="text" class="playerName" placeholder="Nickname do Player">
                     </div>
-                    <div class="form-group">
-                        <label style="font-size: 0.8rem;">Foto do Jogador:</label>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size: 0.75rem;">Foto de Perfil:</label>
                         <input type="file" class="playerPhotoFile" accept="image/*">
                     </div>
                 </div>
@@ -343,36 +432,44 @@
             document.getElementById('teamCount').innerText = APP_STATE.teams.length;
             display.innerHTML = '';
 
+            const isAdmin = APP_STATE.currentMode === 'admin';
+
             APP_STATE.teams.forEach(team => {
                 let playersHtml = '';
                 team.players.forEach(p => {
                     playersHtml += `
                         <div class="player-row">
-                            <img src="${p.photo}" class="player-photo" onerror="this.src='${DEFAULT_PLAYER}'">
-                            <span>${p.name}</span>
+                            <div class="player-info">
+                                <img src="${p.photo}" class="player-photo" onerror="this.src='${DEFAULT_PLAYER}'">
+                                <span>${p.name}</span>
+                            </div>
+                            ${isAdmin ? `<button class="btn-danger" style="padding:2px 6px; font-size:10px;" onclick="deletePlayer('${team.id}', '${p.id}', '${p.name}')">Remover</button>` : ''}
                         </div>
                     `;
                 });
 
                 display.innerHTML += `
                     <div class="team-card">
+                        ${isAdmin ? `<button class="delete-team-btn" onclick="deleteTeam('${team.id}', '${team.name}')">❌ Excluir Time</button>` : ''}
                         <div class="team-header">
                             <img src="${team.logo}" class="team-logo" onerror="this.src='${DEFAULT_LOGO}'">
                             <h3 style="font-size:1.1rem;">${team.name}</h3>
                         </div>
-                        <div style="background: rgba(0,0,0,0.1); font-size:11px; padding: 5px 15px; color: var(--text-muted)">Elenco Registrado</div>
+                        <div style="background: rgba(0,0,0,0.1); font-size:11px; padding: 5px 15px; color: var(--text-muted)">Roster do Time</div>
                         ${playersHtml}
                     </div>
                 `;
             });
         }
 
+        // Chaveamento com Sorteio Puro
         function buildTournamentTree() {
             const size = parseInt(document.getElementById('bracketSize').value);
             if(APP_STATE.teams.length < size) {
-                return alert(`Você precisa de pelo menos ${size} times. Você tem ${APP_STATE.teams.length}.`);
+                return alert(`Inscrições insuficientes. Você precisa de pelo menos ${size} times para gerar esta fase.`);
             }
 
+            // Lógica Algorítmica de Sorteio (Seed Aleatório Seguro)
             let shuffled = [...APP_STATE.teams].sort(() => Math.random() - 0.5).slice(0, size);
             APP_STATE.bracket = { size: size, rounds: {} };
 
@@ -382,7 +479,7 @@
             for(let r = 0; r < roundCount; r++) {
                 APP_STATE.bracket.rounds[r] = [];
                 for(let m = 0; m < matchesInRound; m++) {
-                    let match = { id: `r${r}_m${m}`, t1: null, t2: null, score1: 0, score2: 0, winner: null };
+                    let match = { id: `r${r}_m${m}`, t1: null, t2: null, score1: 0, score2: 0, winner: null, live: false };
                     if(r === 0) {
                         match.t1 = shuffled[m * 2];
                         match.t2 = shuffled[m * 2 + 1];
@@ -392,6 +489,15 @@
                 matchesInRound /= 2;
             }
 
+            pushLog(`Novo Chaveamento de Mata-Mata gerado via sorteio para ${size} equipes.`);
+            saveState();
+            renderBracket();
+        }
+
+        function changeMatchStatus(roundKey, matchId, isLive) {
+            const match = APP_STATE.bracket.rounds[roundKey].find(m => m.id === matchId);
+            match.live = isLive;
+            if(isLive) pushLog(`Partida ${matchId} entrou em modo AO VIVO!`);
             saveState();
             renderBracket();
         }
@@ -401,7 +507,7 @@
             if(!APP_STATE.bracket) return;
 
             container.innerHTML = '';
-            const roundsLabels = { 16: ["Oitavas", "Quartas", "Semifinal", "Final"], 8: ["Quartas", "Semifinal", "Final"], 4: ["Semifinal", "Final"] };
+            const roundsLabels = { 16: ["Oitavas de Final", "Quartas de Final", "Semifinais", "Grande Final"], 8: ["Quartas de Final", "Semifinais", "Grande Final"], 4: ["Semifinais", "Grande Final"] };
             const labels = roundsLabels[APP_STATE.bracket.size];
 
             let roundIndex = 0;
@@ -409,34 +515,42 @@
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'bracket-round';
                 
-                let title = labels[roundIndex] || `Fase ${parseInt(r)+1}`;
+                let title = labels[roundIndex] || `Fase Final`;
                 roundDiv.innerHTML = `<div class="round-title">${title}</div>`;
 
                 APP_STATE.bracket.rounds[r].forEach(match => {
-                    const t1Name = match.t1 ? match.t1.name : "A definir";
+                    const t1Name = match.t1 ? match.t1.name : "Aguardando Resultado";
                     const t1Logo = match.t1 ? match.t1.logo : DEFAULT_LOGO;
-                    const t2Name = match.t2 ? match.t2.name : "A definir";
+                    const t2Name = match.t2 ? match.t2.name : "Aguardando Resultado";
                     const t2Logo = match.t2 ? match.t2.logo : DEFAULT_LOGO;
                     const isPublic = APP_STATE.currentMode === 'publico';
 
                     const matchHtml = `
                         <div class="matchup">
+                            <div class="match-status">
+                                <span>ID: ${match.id}</span>
+                                <span class="${match.live ? 'status-live' : ''}">${match.winner ? '✓ Finalizado' : (match.live ? '● Ao Vivo' : '⌛ Agendado')}</span>
+                            </div>
                             <div class="matchup-team">
                                 <div class="matchup-team-info">
                                     <img src="${t1Logo}" onerror="this.src='${DEFAULT_LOGO}'">
-                                    <span>${t1Name}</span>
+                                    <span style="${match.winner && match.winner.id !== match.t1.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t1Name}</span>
                                 </div>
-                                <input type="number" class="matchup-score" id="score1_${match.id}" value="${match.score1}" ${!match.t1 || !match.t2 || isPublic ? 'disabled' : ''}>
+                                <input type="number" class="matchup-score" id="score1_${match.id}" value="${match.score1}" ${!match.t1 || !match.t2 || isPublic || match.winner ? 'disabled' : ''}>
                             </div>
                             <div class="matchup-team">
                                 <div class="matchup-team-info">
                                     <img src="${t2Logo}" onerror="this.src='${DEFAULT_LOGO}'">
-                                    <span>${t2Name}</span>
+                                    <span style="${match.winner && match.winner.id !== match.t2.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t2Name}</span>
                                 </div>
-                                <input type="number" class="matchup-score" id="score2_${match.id}" value="${match.score2}" ${!match.t1 || !match.t2 || isPublic ? 'disabled' : ''}>
+                                <input type="number" class="matchup-score" id="score2_${match.id}" value="${match.score2}" ${!match.t1 || !match.t2 || isPublic || match.winner ? 'disabled' : ''}>
                             </div>
-                            ${match.t1 && match.t2 && !match.winner && !isPublic ? `<button class="btn-action" onclick="finishMatch('${r}', '${match.id}')">Encerrar Partida</button>` : ''}
-                            ${match.winner ? `<div style="text-align:center; font-size:11px; color: var(--primary); margin-top:5px; font-weight:bold;">Vencedor: ${match.winner.name}</div>` : ''}
+                            ${match.t1 && match.t2 && !match.winner && !isPublic ? `
+                                <div style="display:flex; gap:5px; margin-top:5px;">
+                                    <button class="btn-action" style="background: #232d42;" onclick="changeMatchStatus('${r}', '${match.id}', true)">Start Live</button>
+                                    <button class="btn-action" onclick="finishMatch('${r}', '${match.id}')">Computar</button>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                     roundDiv.innerHTML += matchHtml;
@@ -454,15 +568,17 @@
             const s1 = parseInt(document.getElementById(`score1_${matchId}`).value) || 0;
             const s2 = parseInt(document.getElementById(`score2_${matchId}`).value) || 0;
 
-            if(s1 === s2) return alert("Mata-mata exige desempate por gols ou pênaltis!");
+            if(s1 === s2) return alert("Eventos competitivos profissionais exigem desempate (gols/rounds/pontos adicionais)!");
 
             match.score1 = s1;
             match.score2 = s2;
+            match.live = false;
             
             const vencedor = s1 > s2 ? match.t1 : match.t2;
             const perdedor = s1 > s2 ? match.t2 : match.t1;
             match.winner = vencedor;
 
+            // Estatísticas da Tabela Pro
             APP_STATE.stats[vencedor.id].pts += 3;
             APP_STATE.stats[vencedor.id].j += 1;
             APP_STATE.stats[vencedor.id].v += 1;
@@ -472,6 +588,8 @@
             APP_STATE.stats[perdedor.id].d += 1;
             APP_STATE.stats[perdedor.id].gp += Math.min(s1, s2);
 
+            pushLog(`Partida ${matchId} encerrada: ${vencedor.name} [${Math.max(s1,s2)}] vs [${Math.min(s1,s2)}] ${perdedor.name}`);
+
             const nextRound = APP_STATE.bracket.rounds[r + 1];
             if(nextRound) {
                 const currentMatchIndex = APP_STATE.bracket.rounds[r].indexOf(match);
@@ -479,6 +597,7 @@
                 const slot = currentMatchIndex % 2 === 0 ? 't1' : 't2';
                 nextRound[nextMatchIndex][slot] = vencedor;
             } else {
+                pushLog(`🏆 FIM DE EVENTO! A organização ${vencedor.name} conquistou o título da copa Nort Camp!`);
                 alert(`🎉 FIM DO TORNEIO! O grande campeão do Nort Camp é o ${vencedor.name}!`);
             }
 
@@ -499,15 +618,14 @@
                     <tr>
                         <td style="font-weight:bold;">${idx + 1}º</td>
                         <td>
-                            <div class="team-table-cell">
+                            <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
                                 <img src="${row.team.logo}" style="width:26px; height:26px; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_LOGO}'">
                                 ${row.team.name}
                             </div>
                         </td>
-                        <td style="font-weight:bold;">${row.pts}</td>
+                        <td style="font-weight:bold; color:var(--primary);">${row.pts}</td>
                         <td>${row.j}</td>
                         <td>${row.v}</td>
-                        <td>${row.e}</td>
                         <td>${row.d}</td>
                         <td>${row.gp}</td>
                     </tr>
@@ -515,26 +633,20 @@
             });
         }
 
-        // --- FUNÇÃO PARA EXPORTAR DOCUMENTO OFICIAL ---
         function exportarDocumento() {
-            // Garante que a classificação seja atualizada antes de rodar o relatório
             renderLeaderboard();
-            
-            // Ativa temporariamente todas as abas para que apareçam na impressão de uma só vez
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.style.display = 'block');
-
-            // Dispara o comando de impressão do sistema
             window.print();
-
-            // Restaura as abas para o funcionamento normal do site após fechar o menu de impressão
             contents.forEach(c => c.style.display = '');
             const activeTab = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
             document.getElementById(activeTab).style.display = 'block';
         }
 
         window.onload = function() {
+            renderMeta();
             renderTeams();
+            renderLogs();
             applyViewModeLayout(); 
         };
     </script>
