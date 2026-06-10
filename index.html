@@ -47,12 +47,14 @@
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        .form-row { display: flex; gap: 10px; }
         input, select { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; font-size: 14px; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 8px rgba(0, 242, 254, 0.2); }
         
         .btn-submit { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; text-transform: uppercase; font-size: 0.9rem; }
         .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-danger { background: var(--accent) !important; color: white !important; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .btn-warning { background: #ffb74d !important; color: #000 !important; border: none; font-weight: bold; padding: 10px; border-radius: 6px; cursor: pointer; }
 
         /* Lista de Times */
         .items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
@@ -91,64 +93,58 @@
         body.public-mode .matchup-score { pointer-events: none; border-color: transparent; background: transparent; }
         body.public-mode .delete-team-btn { display: none; }
 
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        /* Modal de Kills/Resultados */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-card); padding: 25px; border-radius: 12px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--primary); }
+        .team-kills-section { background: var(--bg-input); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .player-kill-input { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .player-kill-input input { width: 80px; text-align: center; }
 
-        @media print {
-            body { background: #fff !important; color: #000 !important; }
-            header, .tabs, .admin-only, .header-buttons { display: none !important; }
-            .tab-content { display: block !important; }
-            .card { background: #fff !important; color: #000 !important; box-shadow: none !important; }
-            th { background: #f0f0f0 !important; color: #000 !important; }
-            td { color: #000 !important; border-bottom: 1px solid #ccc !important; }
-            .team-card, .matchup { border: 1px solid #000 !important; background: #fff !important; color: #000 !important; }
-            .matchup-team { background: #f5f5f5 !important; color: #000 !important; }
-            .matchup-score { background: #fff !important; color: #000 !important; border: 1px solid #000 !important; }
-            .print-header { display: block !important; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-        }
-        .print-header { display: none; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
-
-    <div class="print-header">
-        <h1>NORT CAMP - RELATÓRIO DO EVENTO</h1>
-        <p>Plataforma Profissional de Gestão de Torneios de Jogos</p>
-    </div>
 
     <header>
         <h1>⚡ Nort Camp</h1>
         <div id="modeIndicator" class="mode-badge mode-admin">Painel do Administrador</div>
         <div class="header-buttons">
-            <button class="export-btn" onclick="exportarDocumento()">📄 Relatório PDF</button>
             <button class="view-toggle-btn" onclick="toggleViewMode()" id="toggleBtn">Visão do Público</button>
         </div>
     </header>
 
     <div class="tabs">
         <button class="tab-btn active" id="tabBtnCadastro" onclick="switchTab('cadastro')">Inscrições & Equipes</button>
-        <button class="tab-btn" onclick="switchTab('classificacao')">Tabela Geral</button>
+        <button class="tab-btn" onclick="switchTab('classificacao')">Tabela e Estatísticas</button>
         <button class="tab-btn" onclick="switchTab('fase-mata')">Chaveamento Ao Vivo</button>
     </div>
 
-    <!-- ABA 1: CADASTRO -->
     <div id="cadastro" class="tab-content active">
         <div class="grid-cadastro" id="cadastroGrid">
             
             <div class="admin-only">
-                <!-- Informações do Evento -->
                 <div class="card">
                     <h2>🎮 Configuração do Evento</h2>
                     <div class="form-group">
                         <label>Título do Jogo / Evento</label>
-                        <input type="text" id="gameTitle" value="Campeonato de Valorant" onchange="updateEventMeta()">
+                        <input type="text" id="gameTitle" value="Campeonato de E-sports" onchange="updateEventMeta()">
                     </div>
                     <div class="form-group">
                         <label>Premiação Total</label>
                         <input type="text" id="prizePool" value="R$ 5.000,00" onchange="updateEventMeta()">
                     </div>
+                    <div class="form-row">
+                        <div class="form-group" style="width: 50%;">
+                            <label>Pontos por Vitória</label>
+                            <input type="number" id="ptsWin" value="10" onchange="updateEventMeta()">
+                        </div>
+                        <div class="form-group" style="width: 50%;">
+                            <label>Pontos por Kill (Abate)</label>
+                            <input type="number" id="ptsKill" value="1" onchange="updateEventMeta()">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Cadastro de Times -->
                 <div class="card">
                     <h2>📝 Inscrição de Equipe</h2>
                     <div class="form-group">
@@ -176,19 +172,18 @@
                     <button class="btn-submit" onclick="saveTeam()">Finalizar Inscrição</button>
                 </div>
 
-                <!-- Audit Logs -->
                 <div class="card">
                     <h2>📋 Histórico da Plataforma</h2>
                     <div class="log-box" id="logBox"></div>
                 </div>
             </div>
 
-            <!-- Dashboard de Times -->
             <div id="teamsDisplaySection" style="grid-column: span 2;">
                 <div class="card" style="margin-bottom: 20px; display: flex; gap: 30px; background: linear-gradient(135deg, #111622, #1b2234);">
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Jogo Oficial:</span> <h3 id="metaGame">Campeonato de Valorant</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Jogo Oficial:</span> <h3 id="metaGame">Campeonato de E-sports</h3></div>
                     <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Premiação:</span> <h3 id="metaPrize" style="color: var(--success);">R$ 5.000,00</h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Vagas Preenchidas:</span> <h3 style="color: var(--primary);"><span id="teamCount">0</span> Cadastrados</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Regras:</span> <h3 style="color: var(--primary); font-size: 14px;"><span id="metaPtsWin">10</span>pts/Vitória | <span id="metaPtsKill">1</span>pts/Kill</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Vagas:</span> <h3 style="color: var(--primary);"><span id="teamCount">0</span> Cadastrados</h3></div>
                 </div>
                 <h2>👥 Organizações e Atletas Confirmados</h2>
                 <div class="items-list" id="teamsDisplay"></div>
@@ -196,7 +191,6 @@
         </div>
     </div>
 
-    <!-- ABA 2: CLASSIFICAÇÃO -->
     <div id="classificacao" class="tab-content">
         <div class="card">
             <h2>📊 Leaderboard Pro (Pontuação Acumulada)</h2>
@@ -206,31 +200,54 @@
                         <tr>
                             <th>Pos</th>
                             <th>Time / Organização</th>
-                            <th>Pts</th>
-                            <th>J</th>
-                            <th>V</th>
-                            <th>D</th>
-                            <th>GP (Gols/Rounds Pró)</th>
+                            <th>Pts Totais</th>
+                            <th>Total Kills</th>
+                            <th>Partidas (J)</th>
+                            <th>Vitórias (V)</th>
+                            <th>Derrotas (D)</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody"></tbody>
                 </table>
             </div>
         </div>
+
+        <div class="card">
+            <h2>🎯 Top Fraggers (Kills Individuais)</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Jogador</th>
+                            <th>Time</th>
+                            <th>Kills Totais</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topFraggersBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- ABA 3: MATA-MATA -->
     <div id="fase-mata" class="tab-content">
         <div class="card admin-only" style="margin-bottom: 20px;">
-            <h2>🎲 Sorteador Algorítmico de Chaves</h2>
-            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <h2>🎲 Gerenciamento do Torneio</h2>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <label>Formato do Chaveamento:</label>
                 <select id="bracketSize" style="width: 230px;">
                     <option value="16">Oitavas de Final (16 Pró-Teams)</option>
                     <option value="8">Quartas de Final (8 Pró-Teams)</option>
                     <option value="4">Semifinais (4 Pró-Teams)</option>
                 </select>
-                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 10px 25px; margin-top:0;">Realizar Sorteio Aleatório</button>
+                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 10px 25px; margin-top:0;">Gerar Chaveamento</button>
+            </div>
+            
+            <hr style="border-color: rgba(255,255,255,0.05); margin: 15px 0;">
+            
+            <div style="display: flex; gap: 15px;">
+                <button class="btn-warning" onclick="resetTournamentData()">🔄 Zerar Torneio Atual (Mantém Equipes)</button>
+                <button class="btn-danger" style="padding: 10px; font-size: 14px;" onclick="hardResetPlatform()">⚠️ Hard Reset (Apagar TUDO para Novo Jogo)</button>
             </div>
         </div>
 
@@ -242,15 +259,39 @@
         </div>
     </div>
 
+    <div id="matchModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalMatchTitle" style="text-align: center; margin-bottom: 25px;">Registrar Resultado da Partida</h2>
+            
+            <div style="margin-bottom: 20px; text-align: center;">
+                <label style="color: var(--primary); font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 10px;">Quem venceu a partida?</label>
+                <select id="winnerSelect" style="width: 80%; text-align: center; font-size: 1.1rem;">
+                    </select>
+            </div>
+
+            <div id="team1KillsContainer" class="team-kills-section"></div>
+            <div id="team2KillsContainer" class="team-kills-section"></div>
+
+            <input type="hidden" id="modalRoundKey">
+            <input type="hidden" id="modalMatchId">
+
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="btn-submit" onclick="saveMatchResult()">💾 Salvar Resultado & Kills</button>
+                <button class="btn-danger" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="closeMatchModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const DEFAULT_LOGO = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=100&q=80"; 
         const DEFAULT_PLAYER = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"; 
 
         let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_pro_data')) || {
-            meta: { game: "Campeonato de Valorant", prize: "R$ 5.000,00" },
+            meta: { game: "Campeonato de E-sports", prize: "R$ 5.000,00", ptsWin: 10, ptsKill: 1 },
             teams: [],
             bracket: null,
-            stats: {},
+            stats: {}, // { teamId: { pts, j, v, d, kills } }
+            playerStats: {}, // { playerId: kills }
             logs: [],
             currentMode: 'admin'
         };
@@ -262,6 +303,7 @@
         function pushLog(message) {
             const timestamp = new Date().toLocaleTimeString();
             APP_STATE.logs.unshift(`[${timestamp}] ${message}`);
+            if(APP_STATE.logs.length > 50) APP_STATE.logs.pop(); // Limita o tamanho do log
             saveState();
             renderLogs();
         }
@@ -285,15 +327,23 @@
         function updateEventMeta() {
             APP_STATE.meta.game = document.getElementById('gameTitle').value;
             APP_STATE.meta.prize = document.getElementById('prizePool').value;
+            APP_STATE.meta.ptsWin = parseInt(document.getElementById('ptsWin').value) || 10;
+            APP_STATE.meta.ptsKill = parseInt(document.getElementById('ptsKill').value) || 1;
             saveState();
             renderMeta();
+            renderLeaderboard(); // Atualiza pontos se mudar a regra
         }
 
         function renderMeta() {
             document.getElementById('metaGame').innerText = APP_STATE.meta.game;
             document.getElementById('metaPrize').innerText = APP_STATE.meta.prize;
+            document.getElementById('metaPtsWin').innerText = APP_STATE.meta.ptsWin;
+            document.getElementById('metaPtsKill').innerText = APP_STATE.meta.ptsKill;
+            
             document.getElementById('gameTitle').value = APP_STATE.meta.game;
             document.getElementById('prizePool').value = APP_STATE.meta.prize;
+            document.getElementById('ptsWin').value = APP_STATE.meta.ptsWin;
+            document.getElementById('ptsKill').value = APP_STATE.meta.ptsKill;
         }
 
         function toggleViewMode() {
@@ -372,40 +422,46 @@
                 
                 if(pName) {
                     const pPhotoBase64 = pFile ? await fileToBase64(pFile) : DEFAULT_PLAYER;
-                    players.push({ id: 'p_' + Math.random().toString(36).substr(2, 9), name: pName, photo: pPhotoBase64 });
+                    const playerId = 'p_' + Math.random().toString(36).substr(2, 9);
+                    players.push({ id: playerId, name: pName, photo: pPhotoBase64 });
+                    APP_STATE.playerStats[playerId] = 0; // Inicia kills do player em 0
                 }
             }
 
             if(players.length === 0) {
-                players = [{ id: 'p_default', name: "Player Sub", photo: DEFAULT_PLAYER }];
+                const defId = 'p_' + Math.random().toString(36).substr(2, 9);
+                players = [{ id: defId, name: "Player Sub", photo: DEFAULT_PLAYER }];
+                APP_STATE.playerStats[defId] = 0;
             }
 
             const newTeam = { id: 't_' + Date.now(), name, logo: logoBase64, players };
             APP_STATE.teams.push(newTeam);
-            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, d: 0, gp: 0 };
+            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
 
-            pushLog(`Equipe registrada com sucesso: ${name} (${players.length} atletas)`);
+            pushLog(`Equipe registrada: ${name} (${players.length} atletas)`);
             clearRegisterForm();
             renderTeams();
+            saveState();
         }
 
-        // ====== EXCLUSÃO DE TIME ======
         function deleteTeam(teamId, teamName) {
             if(confirm(`Tem certeza que deseja banir/excluir a organização "${teamName}" do evento?`)) {
                 APP_STATE.teams = APP_STATE.teams.filter(t => t.id !== teamId);
                 delete APP_STATE.stats[teamId];
                 pushLog(`Organização excluída: ${teamName}`);
+                saveState();
                 renderTeams();
             }
         }
 
-        // ====== EXCLUSÃO DE JOGADOR ======
         function deletePlayer(teamId, playerId, playerName) {
             if(confirm(`Remover o atleta "${playerName}" desta equipe?`)) {
                 const team = APP_STATE.teams.find(t => t.id === teamId);
                 if(team) {
                     team.players = team.players.filter(p => p.id !== playerId);
+                    delete APP_STATE.playerStats[playerId];
                     pushLog(`Atleta ${playerName} removido da equipe ${team.name}`);
+                    saveState();
                     renderTeams();
                 }
             }
@@ -450,7 +506,7 @@
 
                 display.innerHTML += `
                     <div class="team-card">
-                        ${isAdmin ? `<button class="delete-team-btn" onclick="deleteTeam('${team.id}', '${team.name}')">❌ Excluir Time</button>` : ''}
+                        ${isAdmin ? `<button class="delete-team-btn" onclick="deleteTeam('${team.id}', '${team.name}')">❌ Excluir</button>` : ''}
                         <div class="team-header">
                             <img src="${team.logo}" class="team-logo" onerror="this.src='${DEFAULT_LOGO}'">
                             <h3 style="font-size:1.1rem;">${team.name}</h3>
@@ -462,14 +518,14 @@
             });
         }
 
-        // Chaveamento com Sorteio Puro
+        // Chaveamento Algorítmico
         function buildTournamentTree() {
             const size = parseInt(document.getElementById('bracketSize').value);
             if(APP_STATE.teams.length < size) {
                 return alert(`Inscrições insuficientes. Você precisa de pelo menos ${size} times para gerar esta fase.`);
             }
+            if(APP_STATE.bracket && !confirm("Isto irá apagar o chaveamento atual. Deseja sortear novas chaves?")) return;
 
-            // Lógica Algorítmica de Sorteio (Seed Aleatório Seguro)
             let shuffled = [...APP_STATE.teams].sort(() => Math.random() - 0.5).slice(0, size);
             APP_STATE.bracket = { size: size, rounds: {} };
 
@@ -489,7 +545,7 @@
                 matchesInRound /= 2;
             }
 
-            pushLog(`Novo Chaveamento de Mata-Mata gerado via sorteio para ${size} equipes.`);
+            pushLog(`Novo Chaveamento gerado via sorteio para ${size} equipes.`);
             saveState();
             renderBracket();
         }
@@ -497,14 +553,17 @@
         function changeMatchStatus(roundKey, matchId, isLive) {
             const match = APP_STATE.bracket.rounds[roundKey].find(m => m.id === matchId);
             match.live = isLive;
-            if(isLive) pushLog(`Partida ${matchId} entrou em modo AO VIVO!`);
+            if(isLive) pushLog(`Partida ID: ${matchId} entrou em modo AO VIVO!`);
             saveState();
             renderBracket();
         }
 
         function renderBracket() {
             const container = document.getElementById('bracketContainer');
-            if(!APP_STATE.bracket) return;
+            if(!APP_STATE.bracket) {
+                container.innerHTML = '<p style="color: var(--text-muted);">Aguardando sorteio oficial das chaves pelo organizador.</p>';
+                return;
+            }
 
             container.innerHTML = '';
             const roundsLabels = { 16: ["Oitavas de Final", "Quartas de Final", "Semifinais", "Grande Final"], 8: ["Quartas de Final", "Semifinais", "Grande Final"], 4: ["Semifinais", "Grande Final"] };
@@ -536,19 +595,19 @@
                                     <img src="${t1Logo}" onerror="this.src='${DEFAULT_LOGO}'">
                                     <span style="${match.winner && match.winner.id !== match.t1.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t1Name}</span>
                                 </div>
-                                <input type="number" class="matchup-score" id="score1_${match.id}" value="${match.score1}" ${!match.t1 || !match.t2 || isPublic || match.winner ? 'disabled' : ''}>
+                                <span class="matchup-score">${match.winner ? match.score1 : '-'}</span>
                             </div>
                             <div class="matchup-team">
                                 <div class="matchup-team-info">
                                     <img src="${t2Logo}" onerror="this.src='${DEFAULT_LOGO}'">
                                     <span style="${match.winner && match.winner.id !== match.t2.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t2Name}</span>
                                 </div>
-                                <input type="number" class="matchup-score" id="score2_${match.id}" value="${match.score2}" ${!match.t1 || !match.t2 || isPublic || match.winner ? 'disabled' : ''}>
+                                <span class="matchup-score">${match.winner ? match.score2 : '-'}</span>
                             </div>
                             ${match.t1 && match.t2 && !match.winner && !isPublic ? `
-                                <div style="display:flex; gap:5px; margin-top:5px;">
-                                    <button class="btn-action" style="background: #232d42;" onclick="changeMatchStatus('${r}', '${match.id}', true)">Start Live</button>
-                                    <button class="btn-action" onclick="finishMatch('${r}', '${match.id}')">Computar</button>
+                                <div style="display:flex; gap:5px; margin-top:10px;">
+                                    <button class="btn-submit" style="background: #232d42; padding: 6px; font-size: 11px;" onclick="changeMatchStatus('${r}', '${match.id}', true)">Modo Ao Vivo</button>
+                                    <button class="btn-submit" style="padding: 6px; font-size: 11px;" onclick="openMatchModal('${r}', '${match.id}')">Computar</button>
                                 </div>
                             ` : ''}
                         </div>
@@ -561,94 +620,219 @@
             }
         }
 
-        function finishMatch(roundKey, matchId) {
-            const r = parseInt(roundKey);
-            const match = APP_STATE.bracket.rounds[r].find(m => m.id === matchId);
-            
-            const s1 = parseInt(document.getElementById(`score1_${matchId}`).value) || 0;
-            const s2 = parseInt(document.getElementById(`score2_${matchId}`).value) || 0;
+        // ================= FUNÇÕES DO MODAL DE RESULTADO =================
 
-            if(s1 === s2) return alert("Eventos competitivos profissionais exigem desempate (gols/rounds/pontos adicionais)!");
+        function openMatchModal(roundKey, matchId) {
+            const match = APP_STATE.bracket.rounds[roundKey].find(m => m.id === matchId);
+            if(!match || !match.t1 || !match.t2) return;
 
-            match.score1 = s1;
-            match.score2 = s2;
-            match.live = false;
-            
-            const vencedor = s1 > s2 ? match.t1 : match.t2;
-            const perdedor = s1 > s2 ? match.t2 : match.t1;
-            match.winner = vencedor;
+            document.getElementById('modalRoundKey').value = roundKey;
+            document.getElementById('modalMatchId').value = matchId;
 
-            // Estatísticas da Tabela Pro
-            APP_STATE.stats[vencedor.id].pts += 3;
-            APP_STATE.stats[vencedor.id].j += 1;
-            APP_STATE.stats[vencedor.id].v += 1;
-            APP_STATE.stats[vencedor.id].gp += Math.max(s1, s2);
+            // Preenche opções de Vencedor
+            const winnerSelect = document.getElementById('winnerSelect');
+            winnerSelect.innerHTML = `
+                <option value="${match.t1.id}">👑 ${match.t1.name} Venceu!</option>
+                <option value="${match.t2.id}">👑 ${match.t2.name} Venceu!</option>
+            `;
 
-            APP_STATE.stats[perdedor.id].j += 1;
-            APP_STATE.stats[perdedor.id].d += 1;
-            APP_STATE.stats[perdedor.id].gp += Math.min(s1, s2);
+            // Gerar inputs de Kills para o Time 1
+            let htmlT1 = `<h4 style="color:var(--primary); margin-bottom:10px;"><img src="${match.t1.logo}" style="width:20px; vertical-align:middle; border-radius:50%; margin-right:5px;"> Kills: ${match.t1.name}</h4>`;
+            match.t1.players.forEach(p => {
+                htmlT1 += `
+                    <div class="player-kill-input">
+                        <span><img src="${p.photo}" style="width:24px; border-radius:50%; vertical-align:middle; margin-right:8px;"> ${p.name}</span>
+                        <input type="number" id="kill_${p.id}" value="0" min="0">
+                    </div>
+                `;
+            });
+            document.getElementById('team1KillsContainer').innerHTML = htmlT1;
 
-            pushLog(`Partida ${matchId} encerrada: ${vencedor.name} [${Math.max(s1,s2)}] vs [${Math.min(s1,s2)}] ${perdedor.name}`);
+            // Gerar inputs de Kills para o Time 2
+            let htmlT2 = `<h4 style="color:var(--primary); margin-bottom:10px;"><img src="${match.t2.logo}" style="width:20px; vertical-align:middle; border-radius:50%; margin-right:5px;"> Kills: ${match.t2.name}</h4>`;
+            match.t2.players.forEach(p => {
+                htmlT2 += `
+                    <div class="player-kill-input">
+                        <span><img src="${p.photo}" style="width:24px; border-radius:50%; vertical-align:middle; margin-right:8px;"> ${p.name}</span>
+                        <input type="number" id="kill_${p.id}" value="0" min="0">
+                    </div>
+                `;
+            });
+            document.getElementById('team2KillsContainer').innerHTML = htmlT2;
 
-            const nextRound = APP_STATE.bracket.rounds[r + 1];
-            if(nextRound) {
-                const currentMatchIndex = APP_STATE.bracket.rounds[r].indexOf(match);
-                const nextMatchIndex = Math.floor(currentMatchIndex / 2);
-                const slot = currentMatchIndex % 2 === 0 ? 't1' : 't2';
-                nextRound[nextMatchIndex][slot] = vencedor;
-            } else {
-                pushLog(`🏆 FIM DE EVENTO! A organização ${vencedor.name} conquistou o título da copa Nort Camp!`);
-                alert(`🎉 FIM DO TORNEIO! O grande campeão do Nort Camp é o ${vencedor.name}!`);
-            }
-
-            saveState();
-            renderBracket();
+            document.getElementById('matchModalOverlay').style.display = 'flex';
         }
 
+        function closeMatchModal() {
+            document.getElementById('matchModalOverlay').style.display = 'none';
+        }
+
+        function saveMatchResult() {
+            const roundKey = document.getElementById('modalRoundKey').value;
+            const matchId = document.getElementById('modalMatchId').value;
+            const r = parseInt(roundKey);
+            const match = APP_STATE.bracket.rounds[r].find(m => m.id === matchId);
+
+            const winnerId = document.getElementById('winnerSelect').value;
+            const vencedor = winnerId === match.t1.id ? match.t1 : match.t2;
+            const perdedor = winnerId === match.t1.id ? match.t2 : match.t1;
+            
+            let totalKillsT1 = 0;
+            let totalKillsT2 = 0;
+
+            // Coletar Kills T1
+            match.t1.players.forEach(p => {
+                const kills = parseInt(document.getElementById(`kill_${p.id}`).value) || 0;
+                APP_STATE.playerStats[p.id] = (APP_STATE.playerStats[p.id] || 0) + kills;
+                totalKillsT1 += kills;
+            });
+
+            // Coletar Kills T2
+            match.t2.players.forEach(p => {
+                const kills = parseInt(document.getElementById(`kill_${p.id}`).value) || 0;
+                APP_STATE.playerStats[p.id] = (APP_STATE.playerStats[p.id] || 0) + kills;
+                totalKillsT2 += kills;
+            });
+
+            match.score1 = totalKillsT1;
+            match.score2 = totalKillsT2;
+            match.winner = vencedor;
+            match.live = false;
+
+            // Avançar Vencedor na Chave
+            const nextRound = r + 1;
+            if(APP_STATE.bracket.rounds[nextRound]) {
+                const nextMatchIndex = Math.floor(parseInt(matchId.split('_m')[1]) / 2);
+                const isTeam1 = parseInt(matchId.split('_m')[1]) % 2 === 0;
+                const nextMatch = APP_STATE.bracket.rounds[nextRound][nextMatchIndex];
+                if(isTeam1) nextMatch.t1 = vencedor;
+                else nextMatch.t2 = vencedor;
+            }
+
+            // Calculadora de Pontos (Pontos = Kills * Multiplicador + Pontos da Vitória)
+            const ptsWin = APP_STATE.meta.ptsWin;
+            const ptsKill = APP_STATE.meta.ptsKill;
+
+            // Atualiza Stats Vencedor
+            if(!APP_STATE.stats[vencedor.id]) APP_STATE.stats[vencedor.id] = { pts:0, j:0, v:0, d:0, kills:0 };
+            APP_STATE.stats[vencedor.id].v += 1;
+            APP_STATE.stats[vencedor.id].j += 1;
+            APP_STATE.stats[vencedor.id].kills += (vencedor.id === match.t1.id ? totalKillsT1 : totalKillsT2);
+            APP_STATE.stats[vencedor.id].pts += ptsWin + (APP_STATE.stats[vencedor.id].kills * ptsKill);
+
+            // Atualiza Stats Perdedor
+            if(!APP_STATE.stats[perdedor.id]) APP_STATE.stats[perdedor.id] = { pts:0, j:0, v:0, d:0, kills:0 };
+            APP_STATE.stats[perdedor.id].d += 1;
+            APP_STATE.stats[perdedor.id].j += 1;
+            APP_STATE.stats[perdedor.id].kills += (perdedor.id === match.t1.id ? totalKillsT1 : totalKillsT2);
+            APP_STATE.stats[perdedor.id].pts += (APP_STATE.stats[perdedor.id].kills * ptsKill);
+
+            pushLog(`Partida Computada: ${vencedor.name} venceu!`);
+            saveState();
+            renderBracket();
+            renderLeaderboard();
+            closeMatchModal();
+        }
+
+        // ================= RESET DA PLATAFORMA =================
+        function resetTournamentData() {
+            if(confirm("Deseja zerar as chaves, kills e pontuações? Os times inscritos serão mantidos.")) {
+                APP_STATE.bracket = null;
+                
+                // Zera kills dos players
+                for(let pid in APP_STATE.playerStats) { APP_STATE.playerStats[pid] = 0; }
+                
+                // Zera status dos times
+                APP_STATE.teams.forEach(t => {
+                    APP_STATE.stats[t.id] = { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
+                });
+                
+                pushLog("Torneio resetado com sucesso.");
+                saveState();
+                renderBracket();
+                renderLeaderboard();
+            }
+        }
+
+        function hardResetPlatform() {
+            if(confirm("⚠️ ATENÇÃO: Isso vai excluir TODOS OS TIMES, chaves, configurações e histórico. Quer preparar para um jogo/campeonato totalmente novo?")) {
+                localStorage.removeItem('nort_camp_pro_data');
+                location.reload();
+            }
+        }
+
+        // ================= LEADERBOARDS =================
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboardBody');
+            const fraggersBody = document.getElementById('topFraggersBody');
+            if(!tbody || !fraggersBody) return;
+
+            // Recalcula pontos baseados na regra atual, caso tenha mudado
+            const pWin = APP_STATE.meta.ptsWin;
+            const pKill = APP_STATE.meta.ptsKill;
+
+            // Tabela Geral de Times
+            let sortedTeams = [...APP_STATE.teams].map(t => {
+                let s = APP_STATE.stats[t.id] || { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
+                s.pts = (s.v * pWin) + (s.kills * pKill); // Matemática de pontos aplicada
+                return { team: t, stats: s };
+            });
+
+            sortedTeams.sort((a, b) => b.stats.pts - a.stats.pts || b.stats.kills - a.stats.kills);
+
             tbody.innerHTML = '';
-
-            let sortedLeaderboard = APP_STATE.teams.map(team => {
-                return { team, ...APP_STATE.stats[team.id] };
-            }).sort((a, b) => b.pts - a.pts || b.gp - a.gp);
-
-            sortedLeaderboard.forEach((row, idx) => {
+            sortedTeams.forEach((item, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td style="font-weight:bold;">${idx + 1}º</td>
-                        <td>
-                            <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
-                                <img src="${row.team.logo}" style="width:26px; height:26px; border-radius:50%; object-fit:cover;" onerror="this.src='${DEFAULT_LOGO}'">
-                                ${row.team.name}
-                            </div>
+                        <td><strong style="color:var(--primary); font-size: 16px;">#${index + 1}</strong></td>
+                        <td style="display:flex; align-items:center; gap:10px;">
+                            <img src="${item.team.logo}" style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
+                            ${item.team.name}
                         </td>
-                        <td style="font-weight:bold; color:var(--primary);">${row.pts}</td>
-                        <td>${row.j}</td>
-                        <td>${row.v}</td>
-                        <td>${row.d}</td>
-                        <td>${row.gp}</td>
+                        <td style="font-weight:bold; color:var(--success); font-size:16px;">${item.stats.pts}</td>
+                        <td>${item.stats.kills}</td>
+                        <td>${item.stats.j}</td>
+                        <td>${item.stats.v}</td>
+                        <td>${item.stats.d}</td>
+                    </tr>
+                `;
+            });
+
+            // Tabela Top Fraggers (Individuais)
+            let allPlayers = [];
+            APP_STATE.teams.forEach(t => {
+                t.players.forEach(p => {
+                    allPlayers.push({ player: p, teamName: t.name, kills: APP_STATE.playerStats[p.id] || 0 });
+                });
+            });
+
+            allPlayers.sort((a, b) => b.kills - a.kills);
+            const topPlayers = allPlayers.slice(0, 10); // Mostra o Top 10
+
+            fraggersBody.innerHTML = '';
+            topPlayers.forEach((item, index) => {
+                fraggersBody.innerHTML += `
+                    <tr>
+                        <td><strong style="color:var(--accent);">#${index + 1}</strong></td>
+                        <td style="display:flex; align-items:center; gap:10px;">
+                            <img src="${item.player.photo}" style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
+                            ${item.player.name}
+                        </td>
+                        <td style="color: var(--text-muted); font-size:12px;">${item.teamName}</td>
+                        <td style="font-weight:bold;">☠️ ${item.kills}</td>
                     </tr>
                 `;
             });
         }
 
-        function exportarDocumento() {
-            renderLeaderboard();
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(c => c.style.display = 'block');
-            window.print();
-            contents.forEach(c => c.style.display = '');
-            const activeTab = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
-            document.getElementById(activeTab).style.display = 'block';
-        }
+        // Inicialização
+        renderMeta();
+        renderLogs();
+        renderTeams();
+        renderBracket();
+        renderLeaderboard();
+        applyViewModeLayout();
 
-        window.onload = function() {
-            renderMeta();
-            renderTeams();
-            renderLogs();
-            applyViewModeLayout(); 
-        };
     </script>
 </body>
 </html>
