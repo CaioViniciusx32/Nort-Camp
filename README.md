@@ -52,4 +52,4 @@ Como o projeto é totalmente *Client-Side*, não há necessidade de instalar dep
 
 1. Clone este repositório:
 ```bash
-git clone [https://github.com/seu-usuario/nort-camp.git](https://github.com/seu-usuario/nort-camp.git)
+git clone https://caioviniciusx32.github.io/Nort-Camp/
