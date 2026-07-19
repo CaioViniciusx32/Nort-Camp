@@ -4,483 +4,378 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nort Camp - Pro Esports Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Teko:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-principal: #07090e;
-            --bg-card: #111622;
-            --bg-input: #1b2234;
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --accent: #e94560;
-            --success: #00e676;
+            --bg-principal: #0b0c10;
+            --bg-card: #1f2833;
+            --bg-input: #151a22;
+            --primary: #66fcf1;
+            --secondary: #45a29e;
+            --accent: #ff4655; 
+            --success: #00ff87;
             --text: #ffffff;
-            --text-muted: #708099;
+            --text-muted: #8b9bb4;
+            --neon-glow: 0 0 10px rgba(102, 252, 241, 0.5);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: var(--bg-principal); color: var(--text); padding: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-principal); color: var(--text); font-family: 'Rajdhani', sans-serif; padding: 20px; background-image: radial-gradient(circle at 50% 0%, #1a222c 0%, transparent 70%); }
         
-        header { text-align: center; margin-bottom: 20px; position: relative; }
-        header h1 { font-size: 2.8rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; }
+        header { text-align: center; margin-bottom: 30px; position: relative; padding: 20px 0; border-bottom: 1px solid rgba(102, 252, 241, 0.2); }
+        header h1 { font-family: 'Teko', sans-serif; font-size: 3.5rem; color: var(--text); text-transform: uppercase; letter-spacing: 4px; text-shadow: 2px 2px 0px var(--accent), -2px -2px 0px var(--primary); margin-bottom: 5px; }
         
-        .mode-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
-        .mode-admin { background: rgba(233, 69, 96, 0.2); color: var(--accent); border: 1px solid var(--accent); }
-        .mode-publico { background: rgba(0, 242, 254, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+        .mode-badge { display: inline-block; padding: 6px 20px; border-radius: 4px; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
+        .mode-admin { background: rgba(255, 70, 85, 0.15); color: var(--accent); border-left: 3px solid var(--accent); }
+        .mode-publico { background: rgba(102, 252, 241, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
 
-        .header-buttons { position: absolute; right: 10px; top: 10px; display: flex; gap: 10px; }
-        .view-toggle-btn { background: var(--bg-card); border: 1px solid var(--secondary); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-        .view-toggle-btn:hover { background: var(--secondary); color: var(--bg-principal); }
-        .export-btn { background: var(--success); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-        .export-btn:hover { opacity: 0.9; }
+        .header-buttons { position: absolute; right: 20px; top: 30px; display: flex; gap: 10px; }
+        .auth-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); }
+        .auth-btn:hover { background: var(--primary); color: var(--bg-principal); box-shadow: var(--neon-glow); }
 
-        /* Abas */
-        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; border-bottom: 2px solid var(--bg-card); padding-bottom: 15px; }
-        .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: 600; cursor: pointer; padding: 8px 16px; transition: 0.3s; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-        .tab-content { display: none; max-width: 1400px; margin: 0 auto; }
+        .tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .tab-btn { background: none; border: none; color: var(--text-muted); font-family: 'Teko', sans-serif; font-size: 1.5rem; letter-spacing: 2px; cursor: pointer; padding: 5px 20px; transition: 0.3s; position: relative; }
+        .tab-btn::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 3px; background: var(--primary); transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); text-shadow: var(--neon-glow); }
+        .tab-btn.active::after { width: 100%; }
+        .tab-content { display: none; max-width: 1400px; margin: 0 auto; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
-        /* Grid e Cards */
         .grid-cadastro { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-        .card { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); margin-bottom: 25px; }
-        h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; border-left: 4px solid var(--primary); padding-left: 10px; }
+        .card { background: var(--bg-card); padding: 25px; border-radius: 4px; border: 1px solid rgba(102, 252, 241, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+        h2 { font-family: 'Teko', sans-serif; font-size: 1.8rem; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
         
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .form-row { display: flex; gap: 10px; }
-        input, select { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; font-size: 14px; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 8px rgba(0, 242, 254, 0.2); }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        input, select { width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.05); color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 10px rgba(102, 252, 241, 0.2); }
         
-        .btn-submit { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; text-transform: uppercase; font-size: 0.9rem; }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-danger { background: var(--accent) !important; color: white !important; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .btn-warning { background: #ffb74d !important; color: #000 !important; border: none; font-weight: bold; padding: 10px; border-radius: 6px; cursor: pointer; }
+        .btn-submit { background: var(--primary); border: none; padding: 12px; color: var(--bg-principal); font-family: 'Rajdhani', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; text-transform: uppercase; font-size: 1.1rem; letter-spacing: 2px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
+        .btn-submit:hover { background: #fff; box-shadow: var(--neon-glow); transform: scale(1.02); }
+        .btn-danger { background: var(--accent) !important; color: white !important; border: none; padding: 6px 12px; cursor: pointer; font-size: 0.9rem; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.2s; }
+        .btn-danger:hover { background: #ff7681 !important; }
 
-        /* Lista de Times */
-        .items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .team-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .team-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.01); }
-        .team-logo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #2a354d; border: 2px solid var(--secondary); }
-        .player-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 15px; border-top: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; }
-        .player-info { display: flex; align-items: center; gap: 10px; }
-        .player-photo { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: #2a354d; }
-        .delete-team-btn { position: absolute; right: 15px; top: 22px; background: none; border: none; color: var(--accent); cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .bracket-wrapper { display: flex; gap: 60px; overflow-x: auto; padding: 20px; min-height: 500px; }
+        .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 280px; position: relative; }
+        .round-title { text-align: center; color: var(--text); font-family: 'Teko', sans-serif; font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
+        
+        .matchup { background: rgba(31, 40, 51, 0.8); border: 1px solid rgba(102, 252, 241, 0.2); padding: 12px; margin: 15px 0; position: relative; z-index: 2; backdrop-filter: blur(5px); }
+        .matchup::before { content: ''; position: absolute; left: -4px; top: 0; width: 4px; height: 100%; background: var(--secondary); transition: 0.3s; }
+        .matchup:hover::before { background: var(--primary); box-shadow: var(--neon-glow); }
+        
+        .match-status { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; letter-spacing: 1px; }
+        .status-live { color: var(--accent) !important; animation: pulse 1s infinite; text-shadow: 0 0 5px var(--accent); }
+        
+        .matchup-team { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.3); margin: 5px 0; font-size: 1rem; font-weight: 600; border: 1px solid transparent; transition: 0.3s; }
+        .matchup-team.winner { border-color: var(--primary); background: rgba(102, 252, 241, 0.05); }
+        .matchup-score { width: 35px; background: var(--bg-principal); color: var(--primary); text-align: center; font-weight: bold; font-size: 1.1rem; padding: 4px 0; }
 
-        /* Chaveamento Pro (Bracket) */
-        .bracket-wrapper { display: flex; gap: 50px; overflow-x: auto; padding: 20px 0; }
-        .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 260px; height: 700px; }
-        .round-title { text-align: center; color: var(--primary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase; font-size: 12px; letter-spacing: 2px; background: rgba(0,242,254,0.05); padding: 5px; border-radius: 4px; }
-        
-        .matchup { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px; margin: 15px 0; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .match-status { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 6px; display: flex; justify-content: space-between; }
-        .status-live { color: var(--accent) !important; animation: pulse 1.5s infinite; }
-        .matchup-team { display: flex; align-items: center; justify-content: space-between; padding: 8px; background: var(--bg-input); margin: 4px 0; border-radius: 5px; font-size: 13px; }
-        .matchup-team img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-right: 8px; }
-        .matchup-score { width: 38px; background: var(--bg-principal); border: 1px solid var(--secondary); color: #fff; text-align: center; border-radius: 4px; font-weight: bold; padding: 2px; }
-        
-        /* Tabela */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 14px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: left; }
-        th { background-color: rgba(255,255,255,0.01); color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        th, td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        th { background-color: rgba(0,0,0,0.2); color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        tr:hover td { background-color: rgba(102, 252, 241, 0.03); }
 
-        /* Logs Auditoria */
-        .log-box { max-height: 150px; overflow-y: auto; background: var(--bg-input); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; color: var(--text-muted); }
-        .log-item { margin-bottom: 4px; border-left: 2px solid var(--secondary); padding-left: 6px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 16, 0.95); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg-card); padding: 40px; border: 1px solid var(--accent); width: 100%; max-width: 500px; position: relative; box-shadow: 0 0 30px rgba(255, 70, 85, 0.2); }
+        
+        .auth-form { display: none; }
+        .auth-form.active { display: block; animation: fadeIn 0.3s; }
 
-        /* Visões Condicionais */
-        .admin-only { display: block; }
-        body.public-mode .admin-only { display: none !important; }
-        body.public-mode .matchup-score { pointer-events: none; border-color: transparent; background: transparent; }
-        body.public-mode .delete-team-btn { display: none; }
+        .admin-only { display: none; }
+        body.admin-mode .admin-only { display: block; }
+        body:not(.admin-mode) .matchup-score { pointer-events: none; }
+        body:not(.admin-mode) .action-btn { display: none; }
 
-        /* Modal de Kills/Resultados */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--bg-card); padding: 25px; border-radius: 12px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--primary); }
-        .team-kills-section { background: var(--bg-input); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .player-kill-input { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .player-kill-input input { width: 80px; text-align: center; }
-
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>⚡ Nort Camp</h1>
-        <div id="modeIndicator" class="mode-badge mode-admin">Painel do Administrador</div>
+        <h1>⚡ Nort Camp Pro Series</h1>
+        <div id="modeIndicator" class="mode-badge mode-publico">Modo Espectador</div>
         <div class="header-buttons">
-            <button class="view-toggle-btn" onclick="toggleViewMode()" id="toggleBtn">Visão do Público</button>
+            <button class="auth-btn" onclick="openLoginModal()" id="loginBtn">Acesso Admin</button>
+            <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
         </div>
     </header>
 
     <div class="tabs">
-        <button class="tab-btn active" id="tabBtnCadastro" onclick="switchTab('cadastro')">Inscrições & Equipes</button>
-        <button class="tab-btn" onclick="switchTab('classificacao')">Tabela e Estatísticas</button>
-        <button class="tab-btn" onclick="switchTab('fase-mata')">Chaveamento Ao Vivo</button>
+        <button class="tab-btn active" id="tabBtnCadastro" onclick="switchTab('cadastro')">Equipes Oficiais</button>
+        <button class="tab-btn" onclick="switchTab('classificacao')">Leaderboard</button>
+        <button class="tab-btn" onclick="switchTab('fase-mata')">Chaves (Bracket)</button>
     </div>
 
+    <!-- Tela Principal dividida -->
     <div id="cadastro" class="tab-content active">
-        <div class="grid-cadastro" id="cadastroGrid">
+        <div class="grid-cadastro" id="cadastroGrid" style="grid-template-columns: 1fr;">
             
             <div class="admin-only">
-                <div class="card">
-                    <h2>🎮 Configuração do Evento</h2>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h2>🎮 Configurações do Campeonato</h2>
                     <div class="form-group">
-                        <label>Título do Jogo / Evento</label>
-                        <input type="text" id="gameTitle" value="Campeonato de E-sports" onchange="updateEventMeta()">
+                        <label>Título do Evento</label>
+                        <input type="text" id="gameTitle" value="Nort Camp Invitational" onchange="updateEventMeta()">
                     </div>
                     <div class="form-group">
-                        <label>Premiação Total</label>
-                        <input type="text" id="prizePool" value="R$ 5.000,00" onchange="updateEventMeta()">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="width: 50%;">
-                            <label>Pontos por Vitória</label>
-                            <input type="number" id="ptsWin" value="10" onchange="updateEventMeta()">
-                        </div>
-                        <div class="form-group" style="width: 50%;">
-                            <label>Pontos por Kill (Abate)</label>
-                            <input type="number" id="ptsKill" value="1" onchange="updateEventMeta()">
-                        </div>
+                        <label>Premiação (Prize Pool)</label>
+                        <input type="text" id="prizePool" value="R$ 10.000,00" onchange="updateEventMeta()">
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2>📝 Inscrição de Equipe</h2>
+                    <h2>📝 Registro de Line-up</h2>
                     <div class="form-group">
-                        <label>Nome da Organização/Time</label>
-                        <input type="text" id="teamName" placeholder="Ex: Nort Gaming">
+                        <label>Nome da Organização (TAG)</label>
+                        <input type="text" id="teamName" placeholder="Ex: LOUD, FURIA, NORT...">
                     </div>
-                    <div class="form-group">
-                        <label>Escudo do Time (Do Computador)</label>
-                        <input type="file" id="teamLogoFile" accept="image/*">
-                    </div>
-                    
-                    <h3 style="font-size:0.9rem; margin: 15px 0 10px 0; color: var(--secondary); text-transform: uppercase;">Membros da Line-up</h3>
-                    <div id="playersInputs">
-                        <div class="player-input-block" style="background: rgba(255,255,255,0.01); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                            <div class="form-group">
-                                <input type="text" class="playerName" placeholder="Nickname do Player">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label style="font-size: 0.75rem;">Foto de Perfil:</label>
-                                <input type="file" class="playerPhotoFile" accept="image/*">
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn-submit" style="background:none; border: 1px dashed var(--secondary); color: var(--secondary); margin-bottom:15px; font-size: 12px; padding: 6px;" onclick="addPlayerField()">+ Slot de Jogador</button>
-                    <button class="btn-submit" onclick="saveTeam()">Finalizar Inscrição</button>
-                </div>
-
-                <div class="card">
-                    <h2>📋 Histórico da Plataforma</h2>
-                    <div class="log-box" id="logBox"></div>
+                    <button class="btn-submit" onclick="saveTeamMock()">+ Registrar Equipe</button>
                 </div>
             </div>
 
-            <div id="teamsDisplaySection" style="grid-column: span 2;">
-                <div class="card" style="margin-bottom: 20px; display: flex; gap: 30px; background: linear-gradient(135deg, #111622, #1b2234);">
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Jogo Oficial:</span> <h3 id="metaGame">Campeonato de E-sports</h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Premiação:</span> <h3 id="metaPrize" style="color: var(--success);">R$ 5.000,00</h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Regras:</span> <h3 style="color: var(--primary); font-size: 14px;"><span id="metaPtsWin">10</span>pts/Vitória | <span id="metaPtsKill">1</span>pts/Kill</h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Vagas:</span> <h3 style="color: var(--primary);"><span id="teamCount">0</span> Cadastrados</h3></div>
+            <div id="teamsDisplaySection">
+                <div class="card" style="margin-bottom: 20px; display: flex; justify-content: space-between; border-left: 4px solid var(--accent);">
+                    <div><span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Evento Atual:</span> <h3 id="metaGame" style="font-family: 'Teko'; font-size: 1.5rem;">Nort Camp Invitational</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Prize Pool:</span> <h3 id="metaPrize" style="color: var(--success); font-family: 'Teko'; font-size: 1.5rem;">R$ 10.000,00</h3></div>
+                    <div><span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Organizações:</span> <h3 style="color: var(--primary); font-family: 'Teko'; font-size: 1.5rem;"><span id="teamCount">0</span> Registradas</h3></div>
                 </div>
-                <h2>👥 Organizações e Atletas Confirmados</h2>
-                <div class="items-list" id="teamsDisplay"></div>
+                <h2>👥 Line-ups Confirmadas</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;" id="teamsDisplay"></div>
             </div>
         </div>
     </div>
 
+    <!-- Tabela -->
     <div id="classificacao" class="tab-content">
         <div class="card">
-            <h2>📊 Leaderboard Pro (Pontuação Acumulada)</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Time / Organização</th>
-                            <th>Pts Totais</th>
-                            <th>Total Kills</th>
-                            <th>Partidas (J)</th>
-                            <th>Vitórias (V)</th>
-                            <th>Derrotas (D)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🎯 Top Fraggers (Kills Individuais)</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Jogador</th>
-                            <th>Time</th>
-                            <th>Kills Totais</th>
-                        </tr>
-                    </thead>
-                    <tbody id="topFraggersBody"></tbody>
-                </table>
-            </div>
+            <h2>📊 Classificação Geral</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Seed</th>
+                        <th>Organização</th>
+                        <th>Pontuação</th>
+                        <th>Partidas</th>
+                        <th>Vitórias</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+            </table>
         </div>
     </div>
 
+    <!-- Bracket -->
     <div id="fase-mata" class="tab-content">
         <div class="card admin-only" style="margin-bottom: 20px;">
-            <h2>🎲 Gerenciamento do Torneio</h2>
-            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
-                <label>Formato do Chaveamento:</label>
-                <select id="bracketSize" style="width: 230px;">
-                    <option value="16">Oitavas de Final (16 Pró-Teams)</option>
-                    <option value="8">Quartas de Final (8 Pró-Teams)</option>
-                    <option value="4">Semifinais (4 Pró-Teams)</option>
-                </select>
-                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 10px 25px; margin-top:0;">Gerar Chaveamento</button>
-            </div>
-            
-            <hr style="border-color: rgba(255,255,255,0.05); margin: 15px 0;">
-            
-            <div style="display: flex; gap: 15px;">
-                <button class="btn-warning" onclick="resetTournamentData()">🔄 Zerar Torneio Atual (Mantém Equipes)</button>
-                <button class="btn-danger" style="padding: 10px; font-size: 14px;" onclick="hardResetPlatform()">⚠️ Hard Reset (Apagar TUDO para Novo Jogo)</button>
+            <h2>⚙️ Controle de Chaveamento</h2>
+            <div style="display: flex; gap: 15px; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Formato (Equipes)</label>
+                    <select id="bracketSize">
+                        <option value="8">Quartas de Final (8 Equipes)</option>
+                        <option value="4">Semifinais (4 Equipes)</option>
+                    </select>
+                </div>
+                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 12px 30px; margin: 0;">Sortear Chaves</button>
             </div>
         </div>
 
-        <div class="card">
-            <h2>🏆 Árvore do Torneio</h2>
+        <div class="card" style="background: rgba(11, 12, 16, 0.8);">
+            <h2>🏆 Bracket Stage</h2>
             <div class="bracket-wrapper" id="bracketContainer">
-                <p style="color: var(--text-muted);">Aguardando sorteio oficial das chaves pelo organizador.</p>
+                <p style="color: var(--text-muted); text-align: center; width: 100%; font-size: 1.2rem;">O chaveamento será revelado pela organização.</p>
             </div>
         </div>
     </div>
 
+    <!-- Modal Avançado de Login/Registro -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')" style="flex: 1; font-size: 1.2rem;">Entrar</button>
+                <button class="tab-btn" id="tabRegister" onclick="switchAuthTab('register')" style="flex: 1; font-size: 1.2rem;">Criar Conta</button>
+            </div>
+
+            <!-- Formulário de Login -->
+            <div id="formLogin" class="auth-form active">
+                <h2 style="text-align: center; color: var(--accent);">Acesso Admin</h2>
+                <input type="text" id="loginUser" placeholder="Nome de Usuário" style="margin-bottom: 15px; text-align: center;">
+                <input type="password" id="loginPass" placeholder="Senha" style="margin-bottom: 15px; text-align: center; font-size: 1.2rem; letter-spacing: 2px;">
+                <button class="btn-submit" onclick="loginAdmin()" style="background: var(--accent);">Acessar Painel</button>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div id="formRegister" class="auth-form">
+                <h2 style="text-align: center; color: var(--primary);">Novo Administrador</h2>
+                <input type="text" id="regUser" placeholder="Escolha um Usuário" style="margin-bottom: 15px; text-align: center;">
+                <input type="password" id="regPass" placeholder="Crie uma Senha" style="margin-bottom: 15px; text-align: center; font-size: 1.2rem; letter-spacing: 2px;">
+                <button class="btn-submit" onclick="registerAdmin()">Cadastrar</button>
+            </div>
+
+            <button class="btn-submit" onclick="closeLoginModal()" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 15px;">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Match Modal -->
     <div id="matchModalOverlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 id="modalMatchTitle" style="text-align: center; margin-bottom: 25px;">Registrar Resultado da Partida</h2>
-            
-            <div style="margin-bottom: 20px; text-align: center;">
-                <label style="color: var(--primary); font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 10px;">Quem venceu a partida?</label>
-                <select id="winnerSelect" style="width: 80%; text-align: center; font-size: 1.1rem;">
-                    </select>
+            <h2 id="modalMatchTitle" style="text-align: center; color: var(--primary);">Registrar Confronto</h2>
+            <div style="margin: 20px 0; text-align: center;">
+                <label style="color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; display: block; margin-bottom: 10px;">Quem venceu o mapa/série?</label>
+                <select id="winnerSelect" style="text-align: center; font-size: 1.1rem; border-color: var(--primary);"></select>
             </div>
-
-            <div id="team1KillsContainer" class="team-kills-section"></div>
-            <div id="team2KillsContainer" class="team-kills-section"></div>
-
             <input type="hidden" id="modalRoundKey">
             <input type="hidden" id="modalMatchId">
-
-            <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <button class="btn-submit" onclick="saveMatchResult()">💾 Salvar Resultado & Kills</button>
-                <button class="btn-danger" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="closeMatchModal()">Cancelar</button>
-            </div>
+            <button class="btn-submit" onclick="saveMatchResult()">Computar Vitória</button>
+            <button class="btn-submit" onclick="closeMatchModal()" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const DEFAULT_LOGO = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=100&q=80"; 
-        const DEFAULT_PLAYER = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"; 
+        // --- 1. GESTÃO DE DADOS (PLATAFORMA E USUÁRIOS) ---
+        const TTL_DAYS = 15;
+        const MS_IN_DAY = 24 * 60 * 60 * 1000;
+        
+        // Dados do Torneio
+        let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_pro_data'));
+        
+        // Banco de Dados de Usuários (Login)
+        let DB_USERS = JSON.parse(localStorage.getItem('nort_camp_users')) || [];
 
-        let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_pro_data')) || {
-            meta: { game: "Campeonato de E-sports", prize: "R$ 5.000,00", ptsWin: 10, ptsKill: 1 },
-            teams: [],
-            bracket: null,
-            stats: {}, // { teamId: { pts, j, v, d, kills } }
-            playerStats: {}, // { playerId: kills }
-            logs: [],
-            currentMode: 'admin'
-        };
+        if (APP_STATE && APP_STATE.createdAt) {
+            const timeElapsed = Date.now() - APP_STATE.createdAt;
+            if (timeElapsed > (TTL_DAYS * MS_IN_DAY)) {
+                localStorage.removeItem('nort_camp_pro_data');
+                APP_STATE = null; 
+            }
+        }
+
+        if (!APP_STATE) {
+            APP_STATE = { createdAt: Date.now(), meta: { game: "Nort Camp Invitational", prize: "R$ 10.000,00" }, teams: [], bracket: null, stats: {} };
+            saveState();
+        }
 
         function saveState() {
             localStorage.setItem('nort_camp_pro_data', JSON.stringify(APP_STATE));
         }
 
-        function pushLog(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            APP_STATE.logs.unshift(`[${timestamp}] ${message}`);
-            if(APP_STATE.logs.length > 50) APP_STATE.logs.pop(); // Limita o tamanho do log
-            saveState();
-            renderLogs();
+        // --- 2. SISTEMA DE LOGIN E REGISTRO ---
+        let isAdmin = false;
+
+        function openLoginModal() { 
+            document.getElementById('loginModal').style.display = 'flex'; 
+            switchAuthTab('login');
+        }
+        function closeLoginModal() { 
+            document.getElementById('loginModal').style.display = 'none'; 
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('regUser').value = '';
+            document.getElementById('regPass').value = '';
         }
 
-        function renderLogs() {
-            const box = document.getElementById('logBox');
-            if(box) {
-                box.innerHTML = APP_STATE.logs.map(log => `<div class="log-item">${log}</div>`).join('');
+        function switchAuthTab(tab) {
+            document.querySelectorAll('#loginModal .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+
+            if(tab === 'login') {
+                document.getElementById('tabLogin').classList.add('active');
+                document.getElementById('formLogin').classList.add('active');
+            } else {
+                document.getElementById('tabRegister').classList.add('active');
+                document.getElementById('formRegister').classList.add('active');
             }
         }
 
-        function fileToBase64(file) {
-            return new Promise((resolve) => {
-                if (!file) resolve(null);
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-            });
+        function registerAdmin() {
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+
+            if(!user || !pass) return alert("Preencha todos os campos para criar a conta.");
+
+            const exists = DB_USERS.find(u => u.username.toLowerCase() === user.toLowerCase());
+            if(exists) return alert("Este nome de usuário já está em uso.");
+
+            // Salva novo usuário no LocalStorage
+            DB_USERS.push({ username: user, password: pass });
+            localStorage.setItem('nort_camp_users', JSON.stringify(DB_USERS));
+
+            alert("Conta criada com sucesso! Você já pode fazer o login.");
+            switchAuthTab('login');
+            document.getElementById('loginUser').value = user;
+            document.getElementById('regUser').value = '';
+            document.getElementById('regPass').value = '';
         }
 
+        function loginAdmin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+
+            // Verifica se as credenciais batem com algum usuário cadastrado
+            const authUser = DB_USERS.find(u => u.username === user && u.password === pass);
+
+            if (authUser) {
+                isAdmin = true;
+                document.body.classList.add('admin-mode');
+                document.getElementById('modeIndicator').innerText = `Painel: ${authUser.username.toUpperCase()}`;
+                document.getElementById('modeIndicator').className = "mode-badge mode-admin";
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('cadastroGrid').style.gridTemplateColumns = "1fr 2fr";
+                closeLoginModal();
+                renderTeams();
+                renderBracket();
+            } else {
+                alert("Usuário ou senha incorretos.");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.body.classList.remove('admin-mode');
+            document.getElementById('modeIndicator').innerText = "Modo Espectador";
+            document.getElementById('modeIndicator').className = "mode-badge mode-publico";
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('cadastroGrid').style.gridTemplateColumns = "1fr";
+            renderTeams();
+            renderBracket();
+        }
+
+        // --- 3. LÓGICAS DA PLATAFORMA ---
         function updateEventMeta() {
             APP_STATE.meta.game = document.getElementById('gameTitle').value;
             APP_STATE.meta.prize = document.getElementById('prizePool').value;
-            APP_STATE.meta.ptsWin = parseInt(document.getElementById('ptsWin').value) || 10;
-            APP_STATE.meta.ptsKill = parseInt(document.getElementById('ptsKill').value) || 1;
             saveState();
             renderMeta();
-            renderLeaderboard(); // Atualiza pontos se mudar a regra
         }
 
         function renderMeta() {
             document.getElementById('metaGame').innerText = APP_STATE.meta.game;
             document.getElementById('metaPrize').innerText = APP_STATE.meta.prize;
-            document.getElementById('metaPtsWin').innerText = APP_STATE.meta.ptsWin;
-            document.getElementById('metaPtsKill').innerText = APP_STATE.meta.ptsKill;
-            
             document.getElementById('gameTitle').value = APP_STATE.meta.game;
             document.getElementById('prizePool').value = APP_STATE.meta.prize;
-            document.getElementById('ptsWin').value = APP_STATE.meta.ptsWin;
-            document.getElementById('ptsKill').value = APP_STATE.meta.ptsKill;
-        }
-
-        function toggleViewMode() {
-            APP_STATE.currentMode = (APP_STATE.currentMode === 'admin') ? 'publico' : 'admin';
-            applyViewModeLayout();
-        }
-
-        function applyViewModeLayout() {
-            const body = document.body;
-            const badge = document.getElementById('modeIndicator');
-            const btn = document.getElementById('toggleBtn');
-            const cadastroGrid = document.getElementById('cadastroGrid');
-
-            if (APP_STATE.currentMode === 'publico') {
-                body.classList.add('public-mode');
-                badge.innerText = "Modo de Transmissão / Público";
-                badge.className = "mode-badge mode-publico";
-                btn.innerText = "Modo Admin";
-                if(cadastroGrid) cadastroGrid.style.gridTemplateColumns = "1fr";
-                document.getElementById('tabBtnCadastro').innerText = "Lista de Equipes";
-            } else {
-                body.classList.remove('public-mode');
-                badge.innerText = "Painel do Administrador";
-                badge.className = "mode-badge mode-admin";
-                btn.innerText = "Visão do Público";
-                if(cadastroGrid) cadastroGrid.style.gridTemplateColumns = "1fr 2fr";
-                document.getElementById('tabBtnCadastro').innerText = "Inscrições & Equipes";
-            }
-            renderBracket(); 
-            renderTeams();
         }
 
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
+            document.querySelectorAll('.tabs > .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('body > .tab-content').forEach(content => content.classList.remove('active'));
             event.currentTarget.classList.add('active');
             document.getElementById(tabId).classList.add('active');
-
             if(tabId === 'classificacao') renderLeaderboard();
         }
 
-        function addPlayerField() {
-            const container = document.getElementById('playersInputs');
-            const div = document.createElement('div');
-            div.className = 'player-input-block';
-            div.style.background = "rgba(255,255,255,0.01)";
-            div.style.padding = "10px";
-            div.style.borderRadius = "6px";
-            div.style.marginBottom = "10px";
-            div.innerHTML = `
-                <div class="form-group">
-                    <input type="text" class="playerName" placeholder="Nickname do Player">
-                </div>
-                <div class="form-group" style="margin-bottom:0;">
-                    <label style="font-size: 0.75rem;">Foto de Perfil:</label>
-                    <input type="file" class="playerPhotoFile" accept="image/*">
-                </div>
-            `;
-            container.appendChild(div);
-        }
-
-        async function saveTeam() {
+        function saveTeamMock() {
             const name = document.getElementById('teamName').value.trim();
-            if(!name) return alert("Insira o nome do time.");
-
-            const logoFileInput = document.getElementById('teamLogoFile').files[0];
-            const logoBase64 = logoFileInput ? await fileToBase64(logoFileInput) : DEFAULT_LOGO;
-
-            const playerBlocks = document.querySelectorAll('.player-input-block');
-            let players = [];
-
-            for(let block of playerBlocks) {
-                const pName = block.querySelector('.playerName').value.trim();
-                const pFile = block.querySelector('.playerPhotoFile').files[0];
-                
-                if(pName) {
-                    const pPhotoBase64 = pFile ? await fileToBase64(pFile) : DEFAULT_PLAYER;
-                    const playerId = 'p_' + Math.random().toString(36).substr(2, 9);
-                    players.push({ id: playerId, name: pName, photo: pPhotoBase64 });
-                    APP_STATE.playerStats[playerId] = 0; // Inicia kills do player em 0
-                }
-            }
-
-            if(players.length === 0) {
-                const defId = 'p_' + Math.random().toString(36).substr(2, 9);
-                players = [{ id: defId, name: "Player Sub", photo: DEFAULT_PLAYER }];
-                APP_STATE.playerStats[defId] = 0;
-            }
-
-            const newTeam = { id: 't_' + Date.now(), name, logo: logoBase64, players };
+            if(!name) return alert("Insira a TAG do time.");
+            
+            const newTeam = { id: 't_' + Date.now(), name: name };
             APP_STATE.teams.push(newTeam);
-            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
-
-            pushLog(`Equipe registrada: ${name} (${players.length} atletas)`);
-            clearRegisterForm();
+            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0 };
+            
+            document.getElementById('teamName').value = '';
             renderTeams();
             saveState();
-        }
-
-        function deleteTeam(teamId, teamName) {
-            if(confirm(`Tem certeza que deseja banir/excluir a organização "${teamName}" do evento?`)) {
-                APP_STATE.teams = APP_STATE.teams.filter(t => t.id !== teamId);
-                delete APP_STATE.stats[teamId];
-                pushLog(`Organização excluída: ${teamName}`);
-                saveState();
-                renderTeams();
-            }
-        }
-
-        function deletePlayer(teamId, playerId, playerName) {
-            if(confirm(`Remover o atleta "${playerName}" desta equipe?`)) {
-                const team = APP_STATE.teams.find(t => t.id === teamId);
-                if(team) {
-                    team.players = team.players.filter(p => p.id !== playerId);
-                    delete APP_STATE.playerStats[playerId];
-                    pushLog(`Atleta ${playerName} removido da equipe ${team.name}`);
-                    saveState();
-                    renderTeams();
-                }
-            }
-        }
-
-        function clearRegisterForm() {
-            document.getElementById('teamName').value = '';
-            document.getElementById('teamLogoFile').value = '';
-            document.getElementById('playersInputs').innerHTML = `
-                <div class="player-input-block" style="background: rgba(255,255,255,0.01); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                    <div class="form-group">
-                        <input type="text" class="playerName" placeholder="Nickname do Player">
-                    </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-size: 0.75rem;">Foto de Perfil:</label>
-                        <input type="file" class="playerPhotoFile" accept="image/*">
-                    </div>
-                </div>
-            `;
         }
 
         function renderTeams() {
@@ -488,44 +383,27 @@
             document.getElementById('teamCount').innerText = APP_STATE.teams.length;
             display.innerHTML = '';
 
-            const isAdmin = APP_STATE.currentMode === 'admin';
-
             APP_STATE.teams.forEach(team => {
-                let playersHtml = '';
-                team.players.forEach(p => {
-                    playersHtml += `
-                        <div class="player-row">
-                            <div class="player-info">
-                                <img src="${p.photo}" class="player-photo" onerror="this.src='${DEFAULT_PLAYER}'">
-                                <span>${p.name}</span>
-                            </div>
-                            ${isAdmin ? `<button class="btn-danger" style="padding:2px 6px; font-size:10px;" onclick="deletePlayer('${team.id}', '${p.id}', '${p.name}')">Remover</button>` : ''}
-                        </div>
-                    `;
-                });
-
                 display.innerHTML += `
-                    <div class="team-card">
-                        ${isAdmin ? `<button class="delete-team-btn" onclick="deleteTeam('${team.id}', '${team.name}')">❌ Excluir</button>` : ''}
-                        <div class="team-header">
-                            <img src="${team.logo}" class="team-logo" onerror="this.src='${DEFAULT_LOGO}'">
-                            <h3 style="font-size:1.1rem;">${team.name}</h3>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.1); font-size:11px; padding: 5px 15px; color: var(--text-muted)">Roster do Time</div>
-                        ${playersHtml}
+                    <div class="card" style="padding: 15px; text-align: center;">
+                        <h3 style="font-family: 'Teko'; font-size: 1.4rem; color: var(--text);">${team.name}</h3>
+                        ${isAdmin ? `<button class="btn-danger" style="margin-top: 10px; font-size: 10px;" onclick="deleteTeam('${team.id}')">Excluir Org</button>` : ''}
                     </div>
                 `;
             });
         }
 
-        // Chaveamento Algorítmico
+        function deleteTeam(id) {
+            APP_STATE.teams = APP_STATE.teams.filter(t => t.id !== id);
+            delete APP_STATE.stats[id];
+            saveState();
+            renderTeams();
+        }
+
         function buildTournamentTree() {
             const size = parseInt(document.getElementById('bracketSize').value);
-            if(APP_STATE.teams.length < size) {
-                return alert(`Inscrições insuficientes. Você precisa de pelo menos ${size} times para gerar esta fase.`);
-            }
-            if(APP_STATE.bracket && !confirm("Isto irá apagar o chaveamento atual. Deseja sortear novas chaves?")) return;
-
+            if(APP_STATE.teams.length < size) return alert(`Necessário ${size} times registrados.`);
+            
             let shuffled = [...APP_STATE.teams].sort(() => Math.random() - 0.5).slice(0, size);
             APP_STATE.bracket = { size: size, rounds: {} };
 
@@ -535,7 +413,7 @@
             for(let r = 0; r < roundCount; r++) {
                 APP_STATE.bracket.rounds[r] = [];
                 for(let m = 0; m < matchesInRound; m++) {
-                    let match = { id: `r${r}_m${m}`, t1: null, t2: null, score1: 0, score2: 0, winner: null, live: false };
+                    let match = { id: `M${r}-${m}`, t1: null, t2: null, winner: null, live: false };
                     if(r === 0) {
                         match.t1 = shuffled[m * 2];
                         match.t2 = shuffled[m * 2 + 1];
@@ -544,16 +422,6 @@
                 }
                 matchesInRound /= 2;
             }
-
-            pushLog(`Novo Chaveamento gerado via sorteio para ${size} equipes.`);
-            saveState();
-            renderBracket();
-        }
-
-        function changeMatchStatus(roundKey, matchId, isLive) {
-            const match = APP_STATE.bracket.rounds[roundKey].find(m => m.id === matchId);
-            match.live = isLive;
-            if(isLive) pushLog(`Partida ID: ${matchId} entrou em modo AO VIVO!`);
             saveState();
             renderBracket();
         }
@@ -561,278 +429,119 @@
         function renderBracket() {
             const container = document.getElementById('bracketContainer');
             if(!APP_STATE.bracket) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Aguardando sorteio oficial das chaves pelo organizador.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted); width: 100%; text-align: center;">O chaveamento será revelado em breve.</p>';
                 return;
             }
 
             container.innerHTML = '';
-            const roundsLabels = { 16: ["Oitavas de Final", "Quartas de Final", "Semifinais", "Grande Final"], 8: ["Quartas de Final", "Semifinais", "Grande Final"], 4: ["Semifinais", "Grande Final"] };
-            const labels = roundsLabels[APP_STATE.bracket.size];
+            const labels = APP_STATE.bracket.size === 8 ? ["Quartas de Final", "Semifinais", "Grande Final"] : ["Semifinais", "Grande Final"];
 
             let roundIndex = 0;
             for(let r in APP_STATE.bracket.rounds) {
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'bracket-round';
-                
-                let title = labels[roundIndex] || `Fase Final`;
-                roundDiv.innerHTML = `<div class="round-title">${title}</div>`;
+                roundDiv.innerHTML = `<div class="round-title">${labels[roundIndex]}</div>`;
 
                 APP_STATE.bracket.rounds[r].forEach(match => {
-                    const t1Name = match.t1 ? match.t1.name : "Aguardando Resultado";
-                    const t1Logo = match.t1 ? match.t1.logo : DEFAULT_LOGO;
-                    const t2Name = match.t2 ? match.t2.name : "Aguardando Resultado";
-                    const t2Logo = match.t2 ? match.t2.logo : DEFAULT_LOGO;
-                    const isPublic = APP_STATE.currentMode === 'publico';
+                    const t1Name = match.t1 ? match.t1.name : "TBD";
+                    const t2Name = match.t2 ? match.t2.name : "TBD";
+                    const isW1 = match.winner && match.winner.id === (match.t1 ? match.t1.id : null);
+                    const isW2 = match.winner && match.winner.id === (match.t2 ? match.t2.id : null);
 
                     const matchHtml = `
                         <div class="matchup">
                             <div class="match-status">
-                                <span>ID: ${match.id}</span>
-                                <span class="${match.live ? 'status-live' : ''}">${match.winner ? '✓ Finalizado' : (match.live ? '● Ao Vivo' : '⌛ Agendado')}</span>
+                                <span>#${match.id}</span>
+                                <span class="${match.live ? 'status-live' : ''}">${match.winner ? 'FINALIZADO' : (match.live ? 'LIVE' : 'AGENDADO')}</span>
                             </div>
-                            <div class="matchup-team">
-                                <div class="matchup-team-info">
-                                    <img src="${t1Logo}" onerror="this.src='${DEFAULT_LOGO}'">
-                                    <span style="${match.winner && match.winner.id !== match.t1.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t1Name}</span>
-                                </div>
-                                <span class="matchup-score">${match.winner ? match.score1 : '-'}</span>
+                            <div class="matchup-team ${isW1 ? 'winner' : ''}">
+                                <span>${t1Name}</span>
+                                <span class="matchup-score">${isW1 ? '1' : (match.winner ? '0' : '-')}</span>
                             </div>
-                            <div class="matchup-team">
-                                <div class="matchup-team-info">
-                                    <img src="${t2Logo}" onerror="this.src='${DEFAULT_LOGO}'">
-                                    <span style="${match.winner && match.winner.id !== match.t2.id ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${t2Name}</span>
-                                </div>
-                                <span class="matchup-score">${match.winner ? match.score2 : '-'}</span>
+                            <div class="matchup-team ${isW2 ? 'winner' : ''}">
+                                <span>${t2Name}</span>
+                                <span class="matchup-score">${isW2 ? '1' : (match.winner ? '0' : '-')}</span>
                             </div>
-                            ${match.t1 && match.t2 && !match.winner && !isPublic ? `
-                                <div style="display:flex; gap:5px; margin-top:10px;">
-                                    <button class="btn-submit" style="background: #232d42; padding: 6px; font-size: 11px;" onclick="changeMatchStatus('${r}', '${match.id}', true)">Modo Ao Vivo</button>
-                                    <button class="btn-submit" style="padding: 6px; font-size: 11px;" onclick="openMatchModal('${r}', '${match.id}')">Computar</button>
+                            ${match.t1 && match.t2 && !match.winner ? `
+                                <div class="action-btn" style="display:flex; gap:5px; margin-top:10px;">
+                                    <button class="btn-submit" style="background: var(--primary); color: #000; padding: 6px; font-size: 11px;" onclick="openMatchModal('${r}', '${match.id}')">Lançar Resultado</button>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                     roundDiv.innerHTML += matchHtml;
                 });
-
                 container.appendChild(roundDiv);
                 roundIndex++;
             }
         }
 
-        // ================= FUNÇÕES DO MODAL DE RESULTADO =================
-
         function openMatchModal(roundKey, matchId) {
             const match = APP_STATE.bracket.rounds[roundKey].find(m => m.id === matchId);
-            if(!match || !match.t1 || !match.t2) return;
-
             document.getElementById('modalRoundKey').value = roundKey;
             document.getElementById('modalMatchId').value = matchId;
-
-            // Preenche opções de Vencedor
-            const winnerSelect = document.getElementById('winnerSelect');
-            winnerSelect.innerHTML = `
-                <option value="${match.t1.id}">👑 ${match.t1.name} Venceu!</option>
-                <option value="${match.t2.id}">👑 ${match.t2.name} Venceu!</option>
+            document.getElementById('winnerSelect').innerHTML = `
+                <option value="${match.t1.id}">🏆 ${match.t1.name}</option>
+                <option value="${match.t2.id}">🏆 ${match.t2.name}</option>
             `;
-
-            // Gerar inputs de Kills para o Time 1
-            let htmlT1 = `<h4 style="color:var(--primary); margin-bottom:10px;"><img src="${match.t1.logo}" style="width:20px; vertical-align:middle; border-radius:50%; margin-right:5px;"> Kills: ${match.t1.name}</h4>`;
-            match.t1.players.forEach(p => {
-                htmlT1 += `
-                    <div class="player-kill-input">
-                        <span><img src="${p.photo}" style="width:24px; border-radius:50%; vertical-align:middle; margin-right:8px;"> ${p.name}</span>
-                        <input type="number" id="kill_${p.id}" value="0" min="0">
-                    </div>
-                `;
-            });
-            document.getElementById('team1KillsContainer').innerHTML = htmlT1;
-
-            // Gerar inputs de Kills para o Time 2
-            let htmlT2 = `<h4 style="color:var(--primary); margin-bottom:10px;"><img src="${match.t2.logo}" style="width:20px; vertical-align:middle; border-radius:50%; margin-right:5px;"> Kills: ${match.t2.name}</h4>`;
-            match.t2.players.forEach(p => {
-                htmlT2 += `
-                    <div class="player-kill-input">
-                        <span><img src="${p.photo}" style="width:24px; border-radius:50%; vertical-align:middle; margin-right:8px;"> ${p.name}</span>
-                        <input type="number" id="kill_${p.id}" value="0" min="0">
-                    </div>
-                `;
-            });
-            document.getElementById('team2KillsContainer').innerHTML = htmlT2;
-
             document.getElementById('matchModalOverlay').style.display = 'flex';
         }
-
-        function closeMatchModal() {
-            document.getElementById('matchModalOverlay').style.display = 'none';
-        }
+        function closeMatchModal() { document.getElementById('matchModalOverlay').style.display = 'none'; }
 
         function saveMatchResult() {
-            const roundKey = document.getElementById('modalRoundKey').value;
+            const r = parseInt(document.getElementById('modalRoundKey').value);
             const matchId = document.getElementById('modalMatchId').value;
-            const r = parseInt(roundKey);
             const match = APP_STATE.bracket.rounds[r].find(m => m.id === matchId);
-
             const winnerId = document.getElementById('winnerSelect').value;
-            const vencedor = winnerId === match.t1.id ? match.t1 : match.t2;
-            const perdedor = winnerId === match.t1.id ? match.t2 : match.t1;
             
-            let totalKillsT1 = 0;
-            let totalKillsT2 = 0;
-
-            // Coletar Kills T1
-            match.t1.players.forEach(p => {
-                const kills = parseInt(document.getElementById(`kill_${p.id}`).value) || 0;
-                APP_STATE.playerStats[p.id] = (APP_STATE.playerStats[p.id] || 0) + kills;
-                totalKillsT1 += kills;
-            });
-
-            // Coletar Kills T2
-            match.t2.players.forEach(p => {
-                const kills = parseInt(document.getElementById(`kill_${p.id}`).value) || 0;
-                APP_STATE.playerStats[p.id] = (APP_STATE.playerStats[p.id] || 0) + kills;
-                totalKillsT2 += kills;
-            });
-
-            match.score1 = totalKillsT1;
-            match.score2 = totalKillsT2;
+            const vencedor = winnerId === match.t1.id ? match.t1 : match.t2;
             match.winner = vencedor;
             match.live = false;
 
-            // Avançar Vencedor na Chave
             const nextRound = r + 1;
             if(APP_STATE.bracket.rounds[nextRound]) {
-                const nextMatchIndex = Math.floor(parseInt(matchId.split('_m')[1]) / 2);
-                const isTeam1 = parseInt(matchId.split('_m')[1]) % 2 === 0;
+                const nextMatchIndex = Math.floor(parseInt(matchId.split('-')[1]) / 2);
+                const isTeam1 = parseInt(matchId.split('-')[1]) % 2 === 0;
                 const nextMatch = APP_STATE.bracket.rounds[nextRound][nextMatchIndex];
-                if(isTeam1) nextMatch.t1 = vencedor;
-                else nextMatch.t2 = vencedor;
+                if(isTeam1) nextMatch.t1 = vencedor; else nextMatch.t2 = vencedor;
             }
 
-            // Calculadora de Pontos (Pontos = Kills * Multiplicador + Pontos da Vitória)
-            const ptsWin = APP_STATE.meta.ptsWin;
-            const ptsKill = APP_STATE.meta.ptsKill;
-
-            // Atualiza Stats Vencedor
-            if(!APP_STATE.stats[vencedor.id]) APP_STATE.stats[vencedor.id] = { pts:0, j:0, v:0, d:0, kills:0 };
+            if(!APP_STATE.stats[vencedor.id]) APP_STATE.stats[vencedor.id] = { pts:0, j:0, v:0 };
             APP_STATE.stats[vencedor.id].v += 1;
             APP_STATE.stats[vencedor.id].j += 1;
-            APP_STATE.stats[vencedor.id].kills += (vencedor.id === match.t1.id ? totalKillsT1 : totalKillsT2);
-            APP_STATE.stats[vencedor.id].pts += ptsWin + (APP_STATE.stats[vencedor.id].kills * ptsKill);
+            APP_STATE.stats[vencedor.id].pts += 3;
 
-            // Atualiza Stats Perdedor
-            if(!APP_STATE.stats[perdedor.id]) APP_STATE.stats[perdedor.id] = { pts:0, j:0, v:0, d:0, kills:0 };
-            APP_STATE.stats[perdedor.id].d += 1;
-            APP_STATE.stats[perdedor.id].j += 1;
-            APP_STATE.stats[perdedor.id].kills += (perdedor.id === match.t1.id ? totalKillsT1 : totalKillsT2);
-            APP_STATE.stats[perdedor.id].pts += (APP_STATE.stats[perdedor.id].kills * ptsKill);
-
-            pushLog(`Partida Computada: ${vencedor.name} venceu!`);
             saveState();
             renderBracket();
             renderLeaderboard();
             closeMatchModal();
         }
 
-        // ================= RESET DA PLATAFORMA =================
-        function resetTournamentData() {
-            if(confirm("Deseja zerar as chaves, kills e pontuações? Os times inscritos serão mantidos.")) {
-                APP_STATE.bracket = null;
-                
-                // Zera kills dos players
-                for(let pid in APP_STATE.playerStats) { APP_STATE.playerStats[pid] = 0; }
-                
-                // Zera status dos times
-                APP_STATE.teams.forEach(t => {
-                    APP_STATE.stats[t.id] = { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
-                });
-                
-                pushLog("Torneio resetado com sucesso.");
-                saveState();
-                renderBracket();
-                renderLeaderboard();
-            }
-        }
-
-        function hardResetPlatform() {
-            if(confirm("⚠️ ATENÇÃO: Isso vai excluir TODOS OS TIMES, chaves, configurações e histórico. Quer preparar para um jogo/campeonato totalmente novo?")) {
-                localStorage.removeItem('nort_camp_pro_data');
-                location.reload();
-            }
-        }
-
-        // ================= LEADERBOARDS =================
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboardBody');
-            const fraggersBody = document.getElementById('topFraggersBody');
-            if(!tbody || !fraggersBody) return;
+            if(!tbody) return;
 
-            // Recalcula pontos baseados na regra atual, caso tenha mudado
-            const pWin = APP_STATE.meta.ptsWin;
-            const pKill = APP_STATE.meta.ptsKill;
-
-            // Tabela Geral de Times
-            let sortedTeams = [...APP_STATE.teams].map(t => {
-                let s = APP_STATE.stats[t.id] || { pts: 0, j: 0, v: 0, d: 0, kills: 0 };
-                s.pts = (s.v * pWin) + (s.kills * pKill); // Matemática de pontos aplicada
-                return { team: t, stats: s };
-            });
-
-            sortedTeams.sort((a, b) => b.stats.pts - a.stats.pts || b.stats.kills - a.stats.kills);
+            let sorted = [...APP_STATE.teams].map(t => ({ team: t, stats: APP_STATE.stats[t.id] || { pts:0, j:0, v:0 } }));
+            sorted.sort((a, b) => b.stats.pts - a.stats.pts);
 
             tbody.innerHTML = '';
-            sortedTeams.forEach((item, index) => {
+            sorted.forEach((item, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong style="color:var(--primary); font-size: 16px;">#${index + 1}</strong></td>
-                        <td style="display:flex; align-items:center; gap:10px;">
-                            <img src="${item.team.logo}" style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
-                            ${item.team.name}
-                        </td>
-                        <td style="font-weight:bold; color:var(--success); font-size:16px;">${item.stats.pts}</td>
-                        <td>${item.stats.kills}</td>
+                        <td style="color:var(--primary); font-family: 'Teko'; font-size: 1.5rem;">#${index + 1}</td>
+                        <td style="font-weight:bold; font-size: 1.1rem;">${item.team.name}</td>
+                        <td style="color:var(--success); font-weight:bold;">${item.stats.pts}</td>
                         <td>${item.stats.j}</td>
                         <td>${item.stats.v}</td>
-                        <td>${item.stats.d}</td>
-                    </tr>
-                `;
-            });
-
-            // Tabela Top Fraggers (Individuais)
-            let allPlayers = [];
-            APP_STATE.teams.forEach(t => {
-                t.players.forEach(p => {
-                    allPlayers.push({ player: p, teamName: t.name, kills: APP_STATE.playerStats[p.id] || 0 });
-                });
-            });
-
-            allPlayers.sort((a, b) => b.kills - a.kills);
-            const topPlayers = allPlayers.slice(0, 10); // Mostra o Top 10
-
-            fraggersBody.innerHTML = '';
-            topPlayers.forEach((item, index) => {
-                fraggersBody.innerHTML += `
-                    <tr>
-                        <td><strong style="color:var(--accent);">#${index + 1}</strong></td>
-                        <td style="display:flex; align-items:center; gap:10px;">
-                            <img src="${item.player.photo}" style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
-                            ${item.player.name}
-                        </td>
-                        <td style="color: var(--text-muted); font-size:12px;">${item.teamName}</td>
-                        <td style="font-weight:bold;">☠️ ${item.kills}</td>
                     </tr>
                 `;
             });
         }
 
-        // Inicialização
         renderMeta();
-        renderLogs();
         renderTeams();
         renderBracket();
         renderLeaderboard();
-        applyViewModeLayout();
-
     </script>
 </body>
 </html>
