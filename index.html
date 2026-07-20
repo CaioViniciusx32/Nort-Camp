@@ -22,7 +22,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-principal); color: var(--text); font-family: 'Rajdhani', sans-serif; padding: 20px; background-image: radial-gradient(circle at 50% 0%, #1a222c 0%, transparent 70%); }
+        body { background-color: var(--bg-principal); color: var(--text); font-family: 'Rajdhani', sans-serif; padding: 20px; background-image: radial-gradient(circle at 50% 0%, #1a222c 0%, transparent 70%); min-height: 100vh; }
         
         header { text-align: center; margin-bottom: 30px; position: relative; padding: 20px 0; border-bottom: 1px solid rgba(102, 252, 241, 0.2); }
         header h1 { font-family: 'Teko', sans-serif; font-size: 3.5rem; color: var(--text); text-transform: uppercase; letter-spacing: 4px; text-shadow: 2px 2px 0px var(--accent), -2px -2px 0px var(--primary); margin-bottom: 5px; }
@@ -32,6 +32,8 @@
         .mode-publico { background: rgba(102, 252, 241, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
 
         .header-buttons { position: absolute; right: 20px; top: 30px; display: flex; gap: 10px; }
+        .header-left-buttons { position: absolute; left: 20px; top: 30px; display: flex; gap: 10px; }
+        
         .auth-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); }
         .auth-btn:hover { background: var(--primary); color: var(--bg-principal); box-shadow: var(--neon-glow); }
 
@@ -51,6 +53,7 @@
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         input, select { width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.05); color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600; transition: 0.3s; }
+        input[type="file"] { padding: 8px; font-size: 0.9rem; cursor: pointer; }
         input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 10px rgba(102, 252, 241, 0.2); }
         
         .btn-submit { background: var(--primary); border: none; padding: 12px; color: var(--bg-principal); font-family: 'Rajdhani', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; text-transform: uppercase; font-size: 1.1rem; letter-spacing: 2px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
@@ -88,11 +91,16 @@
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: block; }
         
+        /* Lobby Grid */
+        .lobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 40px auto; }
+        .lobby-card { background: var(--bg-card); border: 1px solid rgba(102, 252, 241, 0.2); padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; border-radius: 8px; }
+        .lobby-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 20px rgba(102, 252, 241, 0.2); }
+        .lobby-card h3 { font-family: 'Teko', sans-serif; font-size: 2rem; color: var(--text); margin-bottom: 10px; }
+        
         .history-item { background: rgba(0,0,0,0.3); border: 1px solid var(--secondary); padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .player-kill-input { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
         .player-kill-input input { width: 60px; padding: 5px; text-align: center; }
 
-        /* Animação do Campeão */
         #championModal { background: rgba(0, 0, 0, 0.95); text-align: center; }
         .champion-title { font-family: 'Teko', sans-serif; font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px var(--gold); animation: pulseScale 2s infinite; text-transform: uppercase; letter-spacing: 5px; }
         .champion-logo-display { width: 150px; height: 150px; border-radius: 50%; margin: 20px auto; border: 4px solid var(--gold); box-shadow: 0 0 30px var(--gold); object-fit: cover; }
@@ -105,111 +113,141 @@
 </head>
 <body>
 
-    <header>
-        <h1>⚡ Nort Camp Pro Series</h1>
-        <div id="modeIndicator" class="mode-badge mode-publico">Modo Espectador</div>
-        <div class="header-buttons">
-            <button class="auth-btn" onclick="openLoginModal()" id="loginBtn">Acesso Admin</button>
-            <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
+    <!-- VISÃO DO LOBBY (LISTA DE CAMPEONATOS) -->
+    <div id="lobbyView" style="display: none;">
+        <header>
+            <h1>⚡ Nort Camp Lobby</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem;">Escolha um campeonato em andamento ou crie um novo</p>
+            <div class="header-buttons">
+                <button class="auth-btn" onclick="openLoginModal()" id="lobbyLoginBtn">Acesso Admin</button>
+                <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
+            </div>
+        </header>
+        
+        <div style="text-align: center; margin-bottom: 30px;" class="admin-only">
+            <button class="btn-submit" style="width: auto; padding: 15px 40px;" onclick="criarNovoCampeonato()">➕ Criar Novo Campeonato</button>
         </div>
-    </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-cadastro" onclick="switchTab('cadastro')">Equipes Oficiais</button>
-        <button class="tab-btn" id="tab-classificacao" onclick="switchTab('classificacao')">Leaderboard</button>
-        <button class="tab-btn" id="tab-fase-mata" onclick="switchTab('fase-mata')">Chaves (Bracket)</button>
-        <button class="tab-btn" id="tab-historico" onclick="switchTab('historico')">Campeonatos Anteriores</button>
+        <div class="lobby-grid" id="lobbyContainer">
+            <!-- Campeonatos renderizados aqui via JS -->
+        </div>
     </div>
 
-    <!-- Tela Equipes -->
-    <div id="cadastro" class="tab-content active">
-        <div class="grid-cadastro" id="cadastroGrid" style="grid-template-columns: 1fr;">
-            <div class="admin-only">
-                <div class="card">
-                    <h2>🎮 Configurações</h2>
-                    <div class="form-group"><label>Título do Evento</label><input type="text" id="gameTitle" onchange="updateEventMeta()"></div>
-                    <div class="form-group"><label>Premiação</label><input type="text" id="prizePool" onchange="updateEventMeta()"></div>
-                    
-                    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                        <button class="btn-submit btn-gold" onclick="finalizarCampeonato()">🏁 Finalizar Campeonato</button>
-                        <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 5px;">Move o evento atual para o histórico e zera as chaves.</p>
-                        <button class="btn-submit btn-danger" onclick="hardReset()" style="margin-top: 15px;">Reset Total (Apagar Tudo)</button>
+    <!-- VISÃO DO APLICATIVO (CAMPEONATO ESPECÍFICO) -->
+    <div id="appView" style="display: none;">
+        <header>
+            <div class="header-left-buttons">
+                <button class="auth-btn" onclick="voltarParaLobby()" style="border-color: var(--text-muted); color: var(--text-muted);">⬅ Voltar ao Lobby</button>
+            </div>
+            <h1>⚡ Nort Camp Pro Series</h1>
+            <div id="modeIndicator" class="mode-badge mode-publico">Modo Espectador</div>
+            <div class="header-buttons">
+                <button class="auth-btn admin-only" onclick="copiarLinkEspectador()" style="border-color: var(--success); color: var(--success);">🔗 Copiar Link Espectador</button>
+                <button class="auth-btn" onclick="openLoginModal()" id="loginBtn">Acesso Admin</button>
+                <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-cadastro" onclick="switchTab('cadastro')">Equipes Oficiais</button>
+            <button class="tab-btn" id="tab-classificacao" onclick="switchTab('classificacao')">Leaderboard</button>
+            <button class="tab-btn" id="tab-fase-mata" onclick="switchTab('fase-mata')">Chaves (Bracket)</button>
+            <button class="tab-btn" id="tab-historico" onclick="switchTab('historico')">Histórico</button>
+        </div>
+
+        <!-- Tela Equipes -->
+        <div id="cadastro" class="tab-content active">
+            <div class="grid-cadastro" id="cadastroGrid" style="grid-template-columns: 1fr;">
+                <div class="admin-only">
+                    <div class="card">
+                        <h2>🎮 Configurações</h2>
+                        <div class="form-group"><label>Título do Evento</label><input type="text" id="gameTitle" onchange="updateEventMeta()"></div>
+                        <div class="form-group"><label>Premiação</label><input type="text" id="prizePool" onchange="updateEventMeta()"></div>
+                        
+                        <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                            <button class="btn-submit btn-gold" onclick="finalizarCampeonato()">🏁 Finalizar Campeonato (Salvar no Histórico)</button>
+                            <button class="btn-submit btn-danger" onclick="apagarCampeonato()" style="margin-top: 15px;">Apagar Campeonato (Excluir)</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>📝 Registrar Equipe</h2>
+                        <div class="form-group"><label>Organização (TAG)</label><input type="text" id="teamName"></div>
+                        <div class="form-group">
+                            <label>Logo da Equipe (Selecione Imagem do PC)</label>
+                            <!-- Input modificado para aceitar arquivo local (Base64) -->
+                            <input type="file" id="teamLogoFile" accept="image/png, image/jpeg, image/jpg">
+                        </div>
+                        <button class="btn-submit" onclick="saveTeamMock()">+ Registrar Equipe</button>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>📝 Registrar Equipe</h2>
-                    <div class="form-group"><label>Organização (TAG)</label><input type="text" id="teamName"></div>
-                    <div class="form-group"><label>URL do Logo (Opcional)</label><input type="text" id="teamLogo" placeholder="https://link-da-imagem.png"></div>
-                    <button class="btn-submit" onclick="saveTeamMock()">+ Registrar Equipe</button>
+                <div>
+                    <div class="card" style="display: flex; justify-content: space-between; border-left: 4px solid var(--accent);">
+                        <div><span style="color: var(--text-muted); font-size: 11px;">Evento Atual:</span> <h3 id="metaGame" style="font-family: 'Teko'; font-size: 1.5rem;"></h3></div>
+                        <div><span style="color: var(--text-muted); font-size: 11px;">Prize Pool:</span> <h3 id="metaPrize" style="color: var(--success); font-family: 'Teko'; font-size: 1.5rem;"></h3></div>
+                        <div><span style="color: var(--text-muted); font-size: 11px;">Organizações:</span> <h3 style="color: var(--primary); font-family: 'Teko'; font-size: 1.5rem;"><span id="teamCount">0</span> Registradas</h3></div>
+                    </div>
+                    <h2>👥 Line-ups Confirmadas</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;" id="teamsDisplay"></div>
                 </div>
             </div>
-
-            <div>
-                <div class="card" style="display: flex; justify-content: space-between; border-left: 4px solid var(--accent);">
-                    <div><span style="color: var(--text-muted); font-size: 11px;">Evento Atual:</span> <h3 id="metaGame" style="font-family: 'Teko'; font-size: 1.5rem;"></h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 11px;">Prize Pool:</span> <h3 id="metaPrize" style="color: var(--success); font-family: 'Teko'; font-size: 1.5rem;"></h3></div>
-                    <div><span style="color: var(--text-muted); font-size: 11px;">Organizações:</span> <h3 style="color: var(--primary); font-family: 'Teko'; font-size: 1.5rem;"><span id="teamCount">0</span> Registradas</h3></div>
-                </div>
-                <h2>👥 Line-ups Confirmadas</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;" id="teamsDisplay"></div>
-            </div>
         </div>
-    </div>
 
-    <!-- Leaderboard -->
-    <div id="classificacao" class="tab-content" style="position: relative;">
-        <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaStats', 'Leaderboard')" style="position: absolute; right: 0; top: -50px; width: 200px;">📥 Exportar PDF</button>
-        <div class="card" id="exportAreaStats">
-            <h2>📊 Classificação Geral</h2>
-            <table>
-                <thead>
-                    <tr><th>Seed</th><th>Organização</th><th>Pontos Totais</th><th>Vitórias (Série)</th><th>Kills (Equipe)</th></tr>
-                </thead>
-                <tbody id="leaderboardBody"></tbody>
-            </table>
-            
-            <h2 style="margin-top: 30px;">🎯 Top Fraggers (Jogadores)</h2>
-            <table>
-                <thead><tr><th>Rank</th><th>Jogador</th><th>Equipe</th><th>Kills Totais</th></tr></thead>
-                <tbody id="playersLeaderboardBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Bracket -->
-    <div id="fase-mata" class="tab-content" style="position: relative;">
-        <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaBracket', 'Chaveamento')" style="position: absolute; right: 0; top: -50px; width: 200px;">📥 Exportar PDF</button>
-        <div class="card admin-only">
-            <h2>⚙️ Controle de Chaveamento</h2>
-            <div style="display: flex; gap: 15px; align-items: flex-end;">
-                <div style="flex: 1;">
-                    <label style="color: var(--text-muted);">Formato</label>
-                    <select id="bracketSize">
-                        <option value="16">Oitavas (16 Equipes / 12 c/ BYE)</option>
-                        <option value="8">Quartas (8 Equipes)</option>
-                        <option value="4">Semifinais (4 Equipes)</option>
-                    </select>
-                </div>
-                <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 12px 30px; margin: 0;">Sortear Chaves</button>
+        <!-- Leaderboard -->
+        <div id="classificacao" class="tab-content" style="position: relative;">
+            <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaStats', 'Leaderboard')" style="position: absolute; right: 0; top: -50px; width: 200px;">📥 Exportar PDF</button>
+            <div class="card" id="exportAreaStats">
+                <h2>📊 Classificação Geral</h2>
+                <table>
+                    <thead>
+                        <tr><th>Seed</th><th>Organização</th><th>Pontos Totais</th><th>Vitórias (Série)</th><th>Kills (Equipe)</th></tr>
+                    </thead>
+                    <tbody id="leaderboardBody"></tbody>
+                </table>
+                
+                <h2 style="margin-top: 30px;">🎯 Top Fraggers (Jogadores)</h2>
+                <table>
+                    <thead><tr><th>Rank</th><th>Jogador</th><th>Equipe</th><th>Kills Totais</th></tr></thead>
+                    <tbody id="playersLeaderboardBody"></tbody>
+                </table>
             </div>
         </div>
 
-        <div class="card" id="exportAreaBracket" style="background: rgba(11, 12, 16, 0.8);">
-            <h2>🏆 Bracket Stage</h2>
-            <div class="bracket-wrapper" id="bracketContainer"></div>
-        </div>
-    </div>
+        <!-- Bracket -->
+        <div id="fase-mata" class="tab-content" style="position: relative;">
+            <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaBracket', 'Chaveamento')" style="position: absolute; right: 0; top: -50px; width: 200px;">📥 Exportar PDF</button>
+            <div class="card admin-only">
+                <h2>⚙️ Controle de Chaveamento</h2>
+                <div style="display: flex; gap: 15px; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label style="color: var(--text-muted);">Formato</label>
+                        <select id="bracketSize">
+                            <option value="16">Oitavas (16 Equipes / 12 c/ BYE)</option>
+                            <option value="8">Quartas (8 Equipes)</option>
+                            <option value="4">Semifinais (4 Equipes)</option>
+                        </select>
+                    </div>
+                    <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 12px 30px; margin: 0;">Sortear Chaves</button>
+                </div>
+            </div>
 
-    <!-- Histórico -->
-    <div id="historico" class="tab-content">
-        <div class="card">
-            <h2>🕰️ Campeonatos Anteriores (Últimos 15 dias)</h2>
-            <div id="historyContainer"></div>
+            <div class="card" id="exportAreaBracket" style="background: rgba(11, 12, 16, 0.8);">
+                <h2>🏆 Bracket Stage</h2>
+                <div class="bracket-wrapper" id="bracketContainer"></div>
+            </div>
+        </div>
+
+        <!-- Histórico -->
+        <div id="historico" class="tab-content">
+            <div class="card">
+                <h2>🕰️ Campeonatos Anteriores (Últimos 15 dias)</h2>
+                <div id="historyContainer"></div>
+            </div>
         </div>
     </div>
     
-    <!-- Animação de Campeão -->
+    <!-- Modais -->
     <div id="championModal" class="modal-overlay">
         <div style="width: 100%; max-width: 800px;">
             <h1 class="champion-title">Temos um Campeão!</h1>
@@ -219,7 +257,6 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; gap: 10px; margin-bottom: 25px;">
@@ -238,7 +275,6 @@
         </div>
     </div>
 
-    <!-- Player Modal -->
     <div id="playerModal" class="modal-overlay">
         <div class="modal-content">
             <h2 id="playerModalTitle" style="color: var(--primary); text-align: center;">Gerenciar Jogadores</h2>
@@ -252,7 +288,6 @@
         </div>
     </div>
 
-    <!-- Match Result Modal -->
     <div id="matchModalOverlay" class="modal-overlay">
         <div class="modal-content" style="max-width: 800px;">
             <h2 style="text-align: center; color: var(--primary);">Lançar Resultado</h2>
@@ -287,37 +322,113 @@
     <script>
         const MS_IN_DAY = 24 * 60 * 60 * 1000;
         
-        let APP_STATE = JSON.parse(localStorage.getItem('nort_camp_pro_data')) || initNewState();
+        // 1. Lógica de Roteamento (Lobby vs App)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlCampeonatoId = urlParams.get('id');
+        
+        let DB_CAMPEONATOS = JSON.parse(localStorage.getItem('nort_camp_todos_campeonatos')) || {};
         let APP_HISTORY = JSON.parse(localStorage.getItem('nort_camp_history')) || [];
         let DB_USERS = JSON.parse(localStorage.getItem('nort_camp_users')) || [];
         let isAdmin = false;
+        let APP_STATE = null;
 
-        // Verifica redirecionamento pós-reload
+        // Limpeza de Histórico (TTL 15 dias)
+        APP_HISTORY = APP_HISTORY.filter(h => (Date.now() - h.createdAt) < (15 * MS_IN_DAY));
+        localStorage.setItem('nort_camp_history', JSON.stringify(APP_HISTORY));
+
         window.onload = function() {
+            if (urlCampeonatoId) {
+                if (DB_CAMPEONATOS[urlCampeonatoId]) {
+                    APP_STATE = DB_CAMPEONATOS[urlCampeonatoId];
+                    document.getElementById('lobbyView').style.display = 'none';
+                    document.getElementById('appView').style.display = 'block';
+                    initApp();
+                } else {
+                    alert("Campeonato não encontrado ou foi deletado!");
+                    window.location.href = window.location.pathname; // volta pro lobby
+                }
+            } else {
+                // Modo Lobby
+                document.getElementById('lobbyView').style.display = 'block';
+                document.getElementById('appView').style.display = 'none';
+                renderLobby();
+            }
+        };
+
+        function saveState() { 
+            if(APP_STATE && APP_STATE.id) {
+                DB_CAMPEONATOS[APP_STATE.id] = APP_STATE;
+                localStorage.setItem('nort_camp_todos_campeonatos', JSON.stringify(DB_CAMPEONATOS));
+            }
+        }
+        function saveHistory() { localStorage.setItem('nort_camp_history', JSON.stringify(APP_HISTORY)); }
+
+        // --- LÓGICA DO LOBBY ---
+        function renderLobby() {
+            const container = document.getElementById('lobbyContainer');
+            container.innerHTML = '';
+            const chaves = Object.keys(DB_CAMPEONATOS);
+            
+            if(chaves.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; color: var(--text-muted); font-size: 1.2rem;">Nenhum campeonato em andamento. Crie um novo se for o administrador.</p>';
+            }
+
+            chaves.forEach(id => {
+                const camp = DB_CAMPEONATOS[id];
+                container.innerHTML += `
+                    <div class="lobby-card" onclick="window.location.href='?id=${id}'">
+                        <h3>${camp.meta.game}</h3>
+                        <p style="color: var(--success); font-weight:bold; margin-bottom: 10px;">${camp.meta.prize}</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">${camp.teams.length} Equipes Registradas</p>
+                    </div>
+                `;
+            });
+        }
+
+        function criarNovoCampeonato() {
+            const nome = prompt("Digite o nome do novo Campeonato:");
+            if(!nome) return;
+            const novoId = 'camp_' + Date.now();
+            const novoEstado = {
+                id: novoId,
+                createdAt: Date.now(),
+                meta: { game: nome, prize: "R$ 0,00" },
+                teams: [], 
+                bracket: null,
+                stats: {} 
+            };
+            DB_CAMPEONATOS[novoId] = novoEstado;
+            localStorage.setItem('nort_camp_todos_campeonatos', JSON.stringify(DB_CAMPEONATOS));
+            window.location.href = `?id=${novoId}`;
+        }
+
+        function voltarParaLobby() {
+            window.location.href = window.location.pathname;
+        }
+
+        function copiarLinkEspectador() {
+            const link = window.location.origin + window.location.pathname + "?id=" + APP_STATE.id;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Link do Espectador copiado! Envie para quem deseja acompanhar.\n(Lembrete: Como não há banco de dados na nuvem, o link só funciona para navegadores na mesma rede local que consigam acessar seu IP ou se estiver hospedado online.)\n\nLink:\n" + link);
+            });
+        }
+
+        function apagarCampeonato() {
+            if(!confirm("Tem certeza que deseja APAGAR COMPLETAMENTE este campeonato? Ele não irá para o histórico.")) return;
+            delete DB_CAMPEONATOS[APP_STATE.id];
+            localStorage.setItem('nort_camp_todos_campeonatos', JSON.stringify(DB_CAMPEONATOS));
+            voltarParaLobby();
+        }
+
+        // --- LÓGICA DO APP (Campeonato Específico) ---
+        function initApp() {
+            renderMeta(); renderTeams(); renderBracket(); renderLeaderboard(); renderHistory();
             const openTab = localStorage.getItem('nort_camp_open_tab');
             if(openTab) {
                 switchTab(openTab);
                 localStorage.removeItem('nort_camp_open_tab');
             }
-        };
-
-        function initNewState() {
-            return {
-                id: Date.now(),
-                createdAt: Date.now(),
-                meta: { game: "Nort Camp Invitational", prize: "R$ 10.000,00" },
-                teams: [], 
-                bracket: null,
-                stats: {} 
-            };
         }
-
-        function saveState() { localStorage.setItem('nort_camp_pro_data', JSON.stringify(APP_STATE)); }
-        function saveHistory() { localStorage.setItem('nort_camp_history', JSON.stringify(APP_HISTORY)); }
-        
-        // Limpeza de Histórico (TTL 15 dias)
-        APP_HISTORY = APP_HISTORY.filter(h => (Date.now() - h.createdAt) < (15 * MS_IN_DAY));
-        saveHistory();
 
         // Helper para o Logo
         function getLogoHtml(team, sizeClass = 'team-logo') {
@@ -329,7 +440,7 @@
         // UI Tabs & Modals
         function switchTab(tabId) {
             document.querySelectorAll('.tabs > .tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('body > .tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('#appView > .tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             document.getElementById(tabId).classList.add('active');
             if(tabId === 'classificacao') renderLeaderboard();
@@ -358,19 +469,32 @@
             const p = document.getElementById('loginPass').value.trim();
             const user = DB_USERS.find(x => x.username === u && x.password === p);
             if(user) {
-                isAdmin = true; document.body.classList.add('admin-mode');
-                document.getElementById('modeIndicator').innerText = `Admin: ${u}`;
-                document.getElementById('modeIndicator').className = "mode-badge mode-admin";
-                document.getElementById('loginBtn').style.display = 'none';
-                closeModal('loginModal'); renderTeams(); renderBracket();
+                isAdmin = true; 
+                document.body.classList.add('admin-mode');
+                
+                // Trata botões no lobby ou no app
+                if(document.getElementById('modeIndicator')) {
+                    document.getElementById('modeIndicator').innerText = `Admin: ${u}`;
+                    document.getElementById('modeIndicator').className = "mode-badge mode-admin";
+                }
+                if(document.getElementById('loginBtn')) document.getElementById('loginBtn').style.display = 'none';
+                if(document.getElementById('lobbyLoginBtn')) document.getElementById('lobbyLoginBtn').style.display = 'none';
+                
+                closeModal('loginModal'); 
+                if(APP_STATE) { renderTeams(); renderBracket(); }
             } else alert("Incorreto.");
         }
         function logoutAdmin() {
-            isAdmin = false; document.body.classList.remove('admin-mode');
-            document.getElementById('modeIndicator').innerText = "Modo Espectador";
-            document.getElementById('modeIndicator').className = "mode-badge mode-publico";
-            document.getElementById('loginBtn').style.display = 'block';
-            renderTeams(); renderBracket();
+            isAdmin = false; 
+            document.body.classList.remove('admin-mode');
+            if(document.getElementById('modeIndicator')) {
+                document.getElementById('modeIndicator').innerText = "Modo Espectador";
+                document.getElementById('modeIndicator').className = "mode-badge mode-publico";
+            }
+            if(document.getElementById('loginBtn')) document.getElementById('loginBtn').style.display = 'block';
+            if(document.getElementById('lobbyLoginBtn')) document.getElementById('lobbyLoginBtn').style.display = 'block';
+            
+            if(APP_STATE) { renderTeams(); renderBracket(); }
         }
 
         // Meta & Resets
@@ -380,6 +504,7 @@
             saveState(); renderMeta();
         }
         function renderMeta() {
+            if(!APP_STATE) return;
             document.getElementById('metaGame').innerText = APP_STATE.meta.game;
             document.getElementById('metaPrize').innerText = APP_STATE.meta.prize;
             document.getElementById('gameTitle').value = APP_STATE.meta.game;
@@ -387,42 +512,49 @@
         }
 
         function finalizarCampeonato() {
-            if(!confirm("Deseja realmente finalizar o campeonato? O histórico será salvo, o chaveamento e os pontos serão zerados, mas as equipes serão mantidas para um novo evento.")) return;
+            if(!confirm("Deseja realmente finalizar o campeonato? Ele será movido para o Histórico e sairá da tela inicial.")) return;
             APP_HISTORY.push(JSON.parse(JSON.stringify(APP_STATE))); 
             saveHistory();
             
-            APP_STATE.bracket = null;
-            APP_STATE.id = Date.now();
-            APP_STATE.createdAt = Date.now();
-            for(let t in APP_STATE.stats) {
-                APP_STATE.stats[t] = { pts: 0, j: 0, v: 0, kills: 0 };
-            }
-            APP_STATE.teams.forEach(t => t.players.forEach(p => { p.kills = 0; p.pts = 0; }));
+            // Remove dos ativos
+            delete DB_CAMPEONATOS[APP_STATE.id];
+            localStorage.setItem('nort_camp_todos_campeonatos', JSON.stringify(DB_CAMPEONATOS));
             
-            saveState(); 
-            localStorage.setItem('nort_camp_open_tab', 'historico');
-            location.reload();
+            alert("Campeonato finalizado e salvo no histórico!");
+            voltarParaLobby();
         }
 
-        function hardReset() {
-            if(!confirm("ALERTA VERMELHO: Isso apagará TODOS os times, jogadores e histórico do evento atual. Tem certeza?")) return;
-            APP_STATE = initNewState();
-            saveState(); location.reload();
-        }
-
-        // Teams & Players
+        // Teams & Players (Com Imagem Local - Base64)
         function saveTeamMock() {
             const name = document.getElementById('teamName').value.trim();
-            const logo = document.getElementById('teamLogo').value.trim();
-            if(!name) return;
-            const newTeam = { id: 't_' + Date.now(), name: name, logo: logo, players: [] };
-            APP_STATE.teams.push(newTeam);
-            APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, kills: 0 };
-            document.getElementById('teamName').value = '';
-            document.getElementById('teamLogo').value = '';
-            saveState(); renderTeams();
+            const fileInput = document.getElementById('teamLogoFile');
+            
+            if(!name) return alert("Digite o nome da organização.");
+
+            // Função interna para adicionar a equipe depois de resolver o Base64
+            const addTeamToState = (logoData) => {
+                const newTeam = { id: 't_' + Date.now(), name: name, logo: logoData, players: [] };
+                APP_STATE.teams.push(newTeam);
+                APP_STATE.stats[newTeam.id] = { pts: 0, j: 0, v: 0, kills: 0 };
+                document.getElementById('teamName').value = '';
+                document.getElementById('teamLogoFile').value = '';
+                saveState(); renderTeams();
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Logo = e.target.result; 
+                    addTeamToState(base64Logo);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                addTeamToState(""); 
+            }
         }
+        
         function renderTeams() {
+            if(!APP_STATE) return;
             const display = document.getElementById('teamsDisplay');
             document.getElementById('teamCount').innerText = APP_STATE.teams.length;
             display.innerHTML = '';
@@ -526,6 +658,7 @@
         }
 
         function renderBracket() {
+            if(!APP_STATE) return;
             const container = document.getElementById('bracketContainer');
             if(!APP_STATE.bracket) return container.innerHTML = '<p>Bracket não gerado.</p>';
             
@@ -644,13 +777,11 @@
 
             const nextRound = r + 1;
             if(APP_STATE.bracket.rounds[nextRound]) {
-                // Avançar no bracket
                 const nextMatchIndex = Math.floor(parseInt(matchId.split('-')[1]) / 2);
                 const isTeam1 = parseInt(matchId.split('-')[1]) % 2 === 0;
                 if(isTeam1) APP_STATE.bracket.rounds[nextRound][nextMatchIndex].t1 = vencedor; 
                 else APP_STATE.bracket.rounds[nextRound][nextMatchIndex].t2 = vencedor;
             } else {
-                // É a final! Disparar animação
                 showChampionAnimation(vencedor);
             }
 
@@ -659,6 +790,7 @@
 
         // Leaderboards
         function renderLeaderboard() {
+            if(!APP_STATE) return;
             const tBody = document.getElementById('leaderboardBody');
             const pBody = document.getElementById('playersLeaderboardBody');
             if(!tBody) return;
@@ -690,6 +822,7 @@
 
         function renderHistory() {
             const cont = document.getElementById('historyContainer');
+            if(!cont) return;
             cont.innerHTML = APP_HISTORY.length === 0 ? '<p>Nenhum campeonato finalizado recentemente.</p>' : '';
             APP_HISTORY.forEach(h => {
                 const date = new Date(h.createdAt).toLocaleDateString('pt-BR');
@@ -711,7 +844,7 @@
                 margin:       10,
                 filename:     `NortCamp_${title}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, backgroundColor: '#0b0c10', useCORS: true }, // useCORS permite exportar os logos via link
+                html2canvas:  { scale: 2, backgroundColor: '#0b0c10', useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
             
@@ -720,8 +853,6 @@
                 element.classList.remove('pdf-export-container');
             });
         }
-
-        renderMeta(); renderTeams(); renderBracket(); renderLeaderboard();
     </script>
 </body>
 </html>
