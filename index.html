@@ -111,6 +111,27 @@
         @keyframes pulseScale { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
         .pdf-export-container { padding: 20px; background: var(--bg-principal); color: var(--text); }
+
+        /* ESTILOS DO RANKING MENSAL (PODIUM E MVP) */
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+        .podium-place { display: flex; flex-direction: column; align-items: center; border-radius: 8px 8px 0 0; padding: 20px 10px; width: 150px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s; }
+        .podium-place:hover { transform: translateY(-10px); }
+        .podium-place.gold { border-top: 5px solid var(--gold); height: 230px; z-index: 3; background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(31,40,51,0.95) 100%); }
+        .podium-place.silver { border-top: 5px solid #c0c0c0; height: 190px; z-index: 2; background: linear-gradient(180deg, rgba(192,192,192,0.15) 0%, rgba(31,40,51,0.95) 100%); }
+        .podium-place.bronze { border-top: 5px solid #cd7f32; height: 160px; z-index: 1; background: linear-gradient(180deg, rgba(205,127,50,0.15) 0%, rgba(31,40,51,0.95) 100%); }
+        .podium-logo { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; background: #000; }
+        .gold .podium-logo { border: 3px solid var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+        .silver .podium-logo { border: 3px solid #c0c0c0; }
+        .bronze .podium-logo { border: 3px solid #cd7f32; }
+        .podium-rank { position: absolute; top: -20px; background: var(--bg-principal); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Teko'; font-size: 1.4rem; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+        .gold .podium-rank { border: 2px solid var(--gold); color: var(--gold); }
+        .silver .podium-rank { border: 2px solid #c0c0c0; color: #c0c0c0; }
+        .bronze .podium-rank { border: 2px solid #cd7f32; color: #cd7f32; }
+
+        .mvp-card { background: linear-gradient(135deg, rgba(31, 40, 51, 0.9), rgba(102, 252, 241, 0.15)); border: 1px solid var(--primary); padding: 20px; border-radius: 12px; text-align: center; margin-top: 40px; max-width: 450px; margin-left: auto; margin-right: auto; box-shadow: 0 0 20px rgba(102, 252, 241, 0.3); transition: 0.3s; }
+        .mvp-card:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(102, 252, 241, 0.5); }
+        .mvp-card h3 { font-family: 'Teko', sans-serif; font-size: 2.2rem; color: var(--primary); margin-bottom: 5px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+        .mvp-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 0 15px rgba(102, 252, 241, 0.4); }
     </style>
 </head>
 <body>
@@ -248,7 +269,7 @@
         <!-- Histórico -->
         <div id="historico" class="tab-content">
             <div class="card">
-                <h2>🕰️ Campeonatos Anteriores (Últimos 15 dias)</h2>
+                <h2>🕰️ Campeonatos Anteriores</h2>
                 <div id="historyContainer"></div>
             </div>
         </div>
@@ -371,13 +392,12 @@
         let isAdmin = false;
         let APP_STATE = null;
 
-        // Limpeza de Histórico (TTL 15 dias)
-        APP_HISTORY = APP_HISTORY.filter(h => (Date.now() - h.createdAt) < (15 * MS_IN_DAY));
+        // Limpeza de Histórico (TTL 60 dias para dar tempo de montar ranking do mês anterior e atual)
+        APP_HISTORY = APP_HISTORY.filter(h => (Date.now() - h.createdAt) < (60 * MS_IN_DAY));
         localStorage.setItem('nort_camp_history', JSON.stringify(APP_HISTORY));
 
         window.onload = function() {
             if (urlCampeonatoId) {
-                // Tenta carregar do DB Ativo ou do Histórico
                 let target = DB_CAMPEONATOS[urlCampeonatoId] || APP_HISTORY.find(h => h.id === urlCampeonatoId);
                 
                 if (target) {
@@ -398,12 +418,10 @@
 
         function saveState() { 
             if(APP_STATE && APP_STATE.id) {
-                // Se estiver no banco ativo, salva
                 if (DB_CAMPEONATOS[APP_STATE.id]) {
                     DB_CAMPEONATOS[APP_STATE.id] = APP_STATE;
                     localStorage.setItem('nort_camp_todos_campeonatos', JSON.stringify(DB_CAMPEONATOS));
                 } else {
-                    // Se for do histórico
                     let index = APP_HISTORY.findIndex(h => h.id === APP_STATE.id);
                     if(index !== -1) {
                         APP_HISTORY[index] = APP_STATE;
@@ -421,6 +439,94 @@
             
             const ativos = Object.values(DB_CAMPEONATOS);
             let html = '';
+
+            // --- LÓGICA DO RANKING MENSAL ---
+            const now = new Date();
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            const currentMonthName = monthNames[now.getMonth()];
+            
+            const thisMonthCamps = APP_HISTORY.filter(h => {
+                const d = new Date(h.createdAt);
+                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            });
+
+            if (thisMonthCamps.length > 0) {
+                let teamAgg = {};
+                let playerAgg = {};
+
+                thisMonthCamps.forEach(camp => {
+                    if(!camp.teams) return;
+                    camp.teams.filter(t => t.id !== 'BYE').forEach(t => {
+                        const tName = t.name.toUpperCase().trim();
+                        if(!teamAgg[tName]) teamAgg[tName] = { name: t.name, logo: t.logo, pts: 0 };
+                        if(camp.stats && camp.stats[t.id]) teamAgg[tName].pts += camp.stats[t.id].pts;
+
+                        if(t.players) {
+                            t.players.forEach(p => {
+                                const pKey = p.name.toUpperCase().trim() + '-' + tName;
+                                if(!playerAgg[pKey]) playerAgg[pKey] = { name: p.name, teamName: t.name, teamLogo: t.logo, kills: 0 };
+                                playerAgg[pKey].kills += (p.kills || 0);
+                            });
+                        }
+                    });
+                });
+
+                const sortedTeams = Object.values(teamAgg).sort((a,b) => b.pts - a.pts);
+                const sortedPlayers = Object.values(playerAgg).sort((a,b) => b.kills - a.kills);
+
+                const t1 = sortedTeams[0];
+                const t2 = sortedTeams[1];
+                const t3 = sortedTeams[2];
+                const mvp = sortedPlayers[0];
+
+                html += `
+                    <div style="grid-column: 1/-1; margin-bottom: 40px; background: rgba(31, 40, 51, 0.4); padding: 40px 20px; border-radius: 12px; border: 1px solid rgba(102, 252, 241, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <h2 style="font-family:'Teko'; font-size:3rem; color:var(--primary); text-align:center; text-transform:uppercase; letter-spacing: 3px; text-shadow: 2px 2px 0px rgba(0,0,0,0.8);">
+                            👑 Ranking Mensal - ${currentMonthName}
+                        </h2>
+                        <p style="text-align:center; color:var(--text-muted); margin-bottom: 30px; font-size: 1.1rem;">Pontuação acumulada dos ganhadores e jogadores de todos os campeonatos finalizados neste mês</p>
+                        
+                        <div class="podium-container">
+                            ${t2 ? `
+                            <div class="podium-place silver">
+                                <div class="podium-rank">2</div>
+                                ${t2.logo ? `<img src="${t2.logo}" class="podium-logo">` : `<div class="podium-logo team-logo-fallback" style="border-color:#c0c0c0; color:#000; font-size:24px; display:flex; align-items:center; justify-content:center; background: #c0c0c0;">${t2.name.charAt(0)}</div>`}
+                                <h4 style="color:#fff; font-family:'Teko'; font-size:1.6rem; text-align:center; margin-top:5px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t2.name}</h4>
+                                <p style="color:var(--text-muted); font-size:1rem; font-weight:600;">${t2.pts} pts</p>
+                            </div>` : ''}
+                            
+                            ${t1 ? `
+                            <div class="podium-place gold">
+                                <div class="podium-rank">1</div>
+                                ${t1.logo ? `<img src="${t1.logo}" class="podium-logo">` : `<div class="podium-logo team-logo-fallback" style="border-color:var(--gold); color:#000; font-size:24px; display:flex; align-items:center; justify-content:center; background: var(--gold);">${t1.name.charAt(0)}</div>`}
+                                <h4 style="color:#fff; font-family:'Teko'; font-size:2rem; text-align:center; margin-top:5px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t1.name}</h4>
+                                <p style="color:var(--gold); font-size:1.2rem; font-weight:bold; text-shadow: 0 0 10px rgba(255,215,0,0.3);">${t1.pts} pts</p>
+                            </div>` : ''}
+                            
+                            ${t3 ? `
+                            <div class="podium-place bronze">
+                                <div class="podium-rank">3</div>
+                                ${t3.logo ? `<img src="${t3.logo}" class="podium-logo">` : `<div class="podium-logo team-logo-fallback" style="border-color:#cd7f32; color:#000; font-size:24px; display:flex; align-items:center; justify-content:center; background: #cd7f32;">${t3.name.charAt(0)}</div>`}
+                                <h4 style="color:#fff; font-family:'Teko'; font-size:1.6rem; text-align:center; margin-top:5px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t3.name}</h4>
+                                <p style="color:var(--text-muted); font-size:1rem; font-weight:600;">${t3.pts} pts</p>
+                            </div>` : ''}
+                        </div>
+
+                        ${mvp && mvp.kills > 0 ? `
+                        <div class="mvp-card">
+                            <h3>🎖️ MVP do Mês</h3>
+                            <div style="display:flex; align-items:center; justify-content:center; gap:25px; margin-top:15px;">
+                                ${mvp.teamLogo ? `<img src="${mvp.teamLogo}" class="mvp-logo">` : `<div class="mvp-logo team-logo-fallback" style="display:flex; align-items:center; justify-content:center; background:var(--primary); color:#000; font-size:30px; font-weight:bold;">${mvp.teamName.charAt(0)}</div>`}
+                                <div style="text-align:left;">
+                                    <h4 style="color:#fff; font-size:1.8rem; margin-bottom:2px; font-family:'Teko'; letter-spacing:1px; white-space:nowrap;">${mvp.name}</h4>
+                                    <p style="color:var(--text-muted); font-size:1rem; margin-bottom:5px;">Equipe: <span style="color:var(--primary); font-weight:bold;">${mvp.teamName}</span></p>
+                                    <p style="color:var(--success); font-weight:bold; font-size:1.3rem; margin-top:5px; text-shadow: 0 0 5px rgba(0,255,135,0.4);">🎯 ${mvp.kills} Kills</p>
+                                </div>
+                            </div>
+                        </div>` : ''}
+                    </div>
+                `;
+            }
 
             // 1. Campeonatos Ativos
             html += '<div style="grid-column: 1/-1;"><h2 style="font-family:\'Teko\'; font-size:2.2rem; color:var(--primary);">⚡ Campeonatos Ativos</h2></div>';
@@ -472,7 +578,6 @@
             document.getElementById('newCampPrize').value = '';
             document.getElementById('newCampLogoFile').value = '';
             
-            // Preenche a opção de reuso com campeonatos antigos
             const select = document.getElementById('importTeamsSelect');
             select.innerHTML = '<option value="">-- Não reutilizar (Criar do zero) --</option>';
             
@@ -499,12 +604,10 @@
                 let teamsImportadas = [];
                 let statsImportadas = {};
 
-                // Reutilização de equipes se selecionado
                 if (importId) {
                     const deOndeImportar = DB_CAMPEONATOS[importId] || APP_HISTORY.find(h => h.id === importId);
                     if (deOndeImportar && deOndeImportar.teams) {
                         teamsImportadas = JSON.parse(JSON.stringify(deOndeImportar.teams));
-                        // Reseta as pontuações e kills mantendo os nomes e fotos dos times/jogadores
                         teamsImportadas.forEach(t => {
                             statsImportadas[t.id] = { pts: 0, j: 0, v: 0, kills: 0 };
                             if (t.players) {
