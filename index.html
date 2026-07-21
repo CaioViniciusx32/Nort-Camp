@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nort Camp - Pro Esports Platform</title>
     <!-- Fontes atualizadas para o estilo Gamer/High-Tech -->
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            /* Paleta Cyber Esports */
+            /* Paleta Cyber Esports Unificada */
             --bg-principal: #050609;
             --bg-card: rgba(15, 20, 30, 0.65);
             --bg-input: rgba(10, 15, 25, 0.8);
@@ -30,7 +30,6 @@
             background-color: var(--bg-principal); 
             color: var(--text); 
             font-family: 'Inter', sans-serif; 
-            padding: 20px; 
             /* Fundo com textura de grid sutil */
             background-image: 
                 linear-gradient(rgba(5, 6, 9, 0.9), rgba(5, 6, 9, 0.9)),
@@ -42,8 +41,203 @@
             min-height: 100vh; 
             overflow-x: hidden;
         }
-        
-        header { 
+
+        /* --------------------------------------
+           ESTILOS DA LANDING PAGE (Unificada)
+           -------------------------------------- */
+        .landing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(5, 6, 9, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+        }
+
+        .landing-logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .landing-logo span {
+            color: var(--primary);
+            text-shadow: var(--glow-text);
+        }
+
+        .landing-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 30px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .landing-nav a:hover {
+            color: var(--primary);
+            text-shadow: var(--glow-text);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(rgba(5,6,9,0.7), rgba(5,6,9,0.9)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+        }
+
+        .hero h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            text-shadow: var(--glow-text);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-landing {
+            background: linear-gradient(135deg, var(--primary), #0099ff);
+            color: #000;
+            padding: 15px 40px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: var(--glow);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+
+        .btn-landing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            filter: brightness(1.2);
+        }
+
+        .features {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
+
+        .section-title span {
+            color: var(--primary);
+            text-shadow: var(--glow-text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 40px 30px;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .landing-footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #030406;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .landing-nav { display: none; }
+        }
+
+        /* --------------------------------------
+           ESTILOS DO APLICATIVO (Plataforma)
+           -------------------------------------- */
+        #appContainerWrapper {
+            padding: 20px;
+        }
+
+        .app-header { 
             text-align: center; 
             margin-bottom: 50px; 
             position: relative; 
@@ -52,7 +246,7 @@
             background: radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
         }
         
-        header h1 { 
+        .app-header h1 { 
             font-family: 'Rajdhani', sans-serif; 
             font-size: 4.5rem; 
             font-weight: 700;
@@ -91,7 +285,6 @@
         .header-buttons { position: absolute; right: 20px; top: 30px; display: flex; gap: 15px; }
         .header-left-buttons { position: absolute; left: 20px; top: 30px; display: flex; gap: 15px; }
         
-        /* Botões Estilo Angular Gamer */
         button {
             clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
         }
@@ -128,7 +321,7 @@
             padding: 12px 30px; 
             transition: 0.3s; 
             position: relative;
-            clip-path: none; /* Abas não precisam de corte angular */
+            clip-path: none;
         }
         .tab-btn::after {
             content: '';
@@ -151,7 +344,6 @@
 
         .grid-cadastro { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
         
-        /* Glassmorphism Cards */
         .card { 
             background: var(--bg-card); 
             backdrop-filter: blur(12px);
@@ -221,7 +413,6 @@
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
         }
         
-        /* Botões Principais */
         .btn-submit { 
             background: linear-gradient(135deg, var(--primary), #0099ff); 
             border: none; 
@@ -242,20 +433,9 @@
             box-shadow: var(--glow);
             filter: brightness(1.2);
         }
-        .btn-danger { 
-            background: transparent; 
-            border: 1px solid var(--accent); 
-            color: var(--accent); 
-        }
-        .btn-danger:hover { 
-            background: var(--accent); 
-            color: #fff; 
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); 
-        }
-        .btn-gold { 
-            background: linear-gradient(135deg, #ffd700, #ffaa00) !important; 
-            color: #000 !important; 
-        }
+        .btn-danger { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-danger:hover { background: var(--accent); color: #fff; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+        .btn-gold { background: linear-gradient(135deg, #ffd700, #ffaa00) !important; color: #000 !important; }
         
         .action-sm { 
             background: rgba(255,255,255,0.05); 
@@ -273,7 +453,6 @@
         }
         .action-sm:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,240,255,0.05); }
 
-        /* Estilo da Chave do Torneio (Bracket) */
         .bracket-wrapper { display: flex; gap: 50px; overflow-x: auto; padding: 20px; min-height: 500px; scrollbar-width: thin; scrollbar-color: var(--primary) var(--bg-input); }
         .bracket-wrapper::-webkit-scrollbar { height: 8px; }
         .bracket-wrapper::-webkit-scrollbar-track { background: var(--bg-input); border-radius: 4px; }
@@ -339,7 +518,6 @@
             font-family: 'Rajdhani', sans-serif;
         }
 
-        /* Tabelas */
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
         th, td { padding: 16px 15px; text-align: left; }
         th { 
@@ -357,7 +535,6 @@
         tr:hover td { background: rgba(255,255,255,0.03); }
         tr:hover td:first-child { border-left-color: var(--primary); }
 
-        /* Modais */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 6, 9, 0.9); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
         .modal-content { 
             background: var(--bg-principal); 
@@ -376,7 +553,6 @@
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: block; }
         
-        /* Lobby Grid */
         .lobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; max-width: 1200px; margin: 40px auto; }
         .lobby-card { 
             background: var(--bg-card); 
@@ -426,7 +602,6 @@
         .player-kill-input { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.95rem; }
         .player-kill-input input { width: 70px; padding: 8px; text-align: center; font-weight: bold; color: var(--primary); }
 
-        /* Animação Campeão */
         #championModal { background: radial-gradient(circle at center, rgba(0, 240, 255, 0.1) 0%, rgba(5,6,9,1) 80%); text-align: center; }
         .champion-title { 
             font-family: 'Rajdhani', sans-serif; 
@@ -450,7 +625,6 @@
         .pdf-export-container th { background: #eee !important; color: #000 !important; }
         .pdf-export-container td { background: #fff !important; color: #333 !important; }
 
-        /* Ranking Mensal */
         .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin-top: 40px; flex-wrap: wrap; }
         .podium-place { 
             display: flex; 
@@ -516,156 +690,195 @@
             justify-content: center;
             gap: 10px;
         }
-        .mvp-card h3::before, .mvp-card h3::after {
-            content: ''; height: 2px; width: 30px; background: var(--secondary);
-        }
+        .mvp-card h3::before, .mvp-card h3::after { content: ''; height: 2px; width: 30px; background: var(--secondary); }
         .mvp-logo { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; border: 2px solid var(--secondary); }
     </style>
 </head>
 <body>
 
-    <!-- VISÃO DO LOBBY (LISTA DE CAMPEONATOS) -->
-    <div id="lobbyView" style="display: none;">
-        <header>
-            <p style="color: var(--primary); font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight:600; letter-spacing: 4px; margin-bottom: 10px;">PRO ESPORTS PLATFORM</p>
-            <h1>NORT CAMP PLATFORM</h1>
-            <div class="header-buttons">
-                <button class="auth-btn" onclick="openLoginModal()" id="lobbyLoginBtn">Acesso Admin</button>
-                <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
-            </div>
+    <!-- VISÃO DA LANDING PAGE (Apresentação Inicial) -->
+    <div id="landingView">
+        <header class="landing-header">
+            <div class="landing-logo">NORT<span> CAMP</span></div>
+            <nav class="landing-nav">
+                <a href="#" onclick="showLobbyView()">Acessar Plataforma</a>
+            </nav>
         </header>
-        
-        <div style="text-align: center; margin-bottom: 50px;" class="admin-only">
-            <button class="btn-submit" style="width: auto; padding: 15px 40px;" onclick="abrirModalCriarCampeonato()">[+] INICIAR NOVO DROP</button>
-        </div>
 
-        <div class="lobby-grid" id="lobbyContainer"></div>
+        <section class="hero">
+            <h1>Domine o Jogo. <span>Evolua.</span></h1>
+            <p>A plataforma definitiva para gamers, equipes de eSports e criadores de conteúdo que buscam performance e gestão de torneios de alto nível.</p>
+            <button onclick="showLobbyView()" class="btn-landing">Junte-se Agora</button>
+        </section>
+
+        <section class="features">
+            <h2 class="section-title">Por que escolher a <span>Nort Camp</span>?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Gestão Completa</h3>
+                    <p>Organize chaves, classifique equipes e controle resultados em tempo real com nossa estrutura otimizada para torneios complexos.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Design Imersivo</h3>
+                    <p>Interface focada na estética gamer moderna, combinando alta performance visual com facilidade de navegação e operação.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Comunidade Ativa</h3>
+                    <p>Mantenha o histórico detalhado dos seus campeonatos, rankings globais e destaque o MVP da sua comunidade a cada temporada.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="landing-footer">
+            <p>&copy; 2026 Nort Camp. Todos os direitos reservados.</p>
+        </footer>
     </div>
 
-    <!-- VISÃO DO APLICATIVO (CAMPEONATO ESPECÍFICO) -->
-    <div id="appView" style="display: none;">
-        <header>
-            <div class="header-left-buttons">
-                <button class="auth-btn" onclick="voltarParaLobby()">← RETORNAR</button>
+    <!-- ENVOLTÓRIO DA PLATAFORMA (Lobby e App) -->
+    <div id="appContainerWrapper" style="display: none;">
+        
+        <!-- VISÃO DO LOBBY (LISTA DE CAMPEONATOS) -->
+        <div id="lobbyView" style="display: none;">
+            <header class="app-header">
+                <p style="color: var(--primary); font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight:600; letter-spacing: 4px; margin-bottom: 10px;">PRO ESPORTS PLATFORM</p>
+                <h1>NORT CAMP PLATFORM</h1>
+                <div class="header-buttons">
+                    <button class="auth-btn" onclick="openLoginModal()" id="lobbyLoginBtn">Acesso Admin</button>
+                    <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">Sair</button>
+                </div>
+            </header>
+            
+            <div style="text-align: center; margin-bottom: 50px;" class="admin-only">
+                <button class="btn-submit" style="width: auto; padding: 15px 40px;" onclick="abrirModalCriarCampeonato()">[+] INICIAR NOVO DROP</button>
             </div>
-            
-            <div id="appHeaderLogoContainer"></div>
-            <h1 id="appHeaderTitle">NORT CAMP PRO SERIES</h1>
-            
-            <div id="modeIndicator" class="mode-badge mode-publico" style="margin-top: 15px;">ESPECTADOR</div>
-            
-            <div class="header-buttons">
-                <button class="auth-btn admin-only" onclick="copiarLinkEspectador()" style="border-color: var(--primary); color: var(--primary);">LINK ESPECTADOR</button>
-                <button class="auth-btn" onclick="openLoginModal()" id="loginBtn">ADMIN</button>
-                <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">SAIR</button>
-            </div>
-        </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" id="tab-cadastro" onclick="switchTab('cadastro')">Equipes</button>
-            <button class="tab-btn" id="tab-classificacao" onclick="switchTab('classificacao')">Leaderboard</button>
-            <button class="tab-btn" id="tab-fase-mata" onclick="switchTab('fase-mata')">Chaves</button>
-            <button class="tab-btn" id="tab-historico" onclick="switchTab('historico')">Histórico</button>
+            <div class="lobby-grid" id="lobbyContainer"></div>
         </div>
 
-        <!-- Tela Equipes -->
-        <div id="cadastro" class="tab-content active">
-            <div class="grid-cadastro" id="cadastroGrid" style="grid-template-columns: 1fr;">
-                <div class="admin-only">
-                    <div class="card">
-                        <h2>CONFIGURAÇÕES GERAIS</h2>
-                        <div class="form-group"><label>Título do Evento</label><input type="text" id="gameTitle" onchange="updateEventMeta()"></div>
-                        <div class="form-group"><label>Premiação (Prize Pool)</label><input type="text" id="prizePool" onchange="updateEventMeta()"></div>
-                        <div class="form-group">
-                            <label>Logo do Campeonato (Arquivo Local)</label>
-                            <input type="file" id="editCampLogoFile" accept="image/*" onchange="updateEventLogo(this)">
-                        </div>
-                        
-                        <div style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px;">
-                            <button class="btn-submit btn-gold" onclick="finalizarCampeonato()">FINALIZAR EVENTO (ARQUIVAR)</button>
-                            <button class="btn-submit btn-danger" onclick="apagarCampeonato()" style="margin-top: 15px;">EXCLUIR EVENTO</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2>REGISTRAR EQUIPE</h2>
-                        <div class="form-group"><label>Organização (TAG)</label><input type="text" id="teamName"></div>
-                        <div class="form-group">
-                            <label>Logo da Equipe (Arquivo Local)</label>
-                            <input type="file" id="teamLogoFile" accept="image/png, image/jpeg, image/jpg">
-                        </div>
-                        <button class="btn-submit" onclick="saveTeamMock()">ADICIONAR ROSTER</button>
-                    </div>
+        <!-- VISÃO DO APLICATIVO (CAMPEONATO ESPECÍFICO) -->
+        <div id="appView" style="display: none;">
+            <header class="app-header">
+                <div class="header-left-buttons">
+                    <button class="auth-btn" onclick="voltarParaLobby()">← RETORNAR</button>
                 </div>
-
-                <div>
-                    <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); border-left: 4px solid var(--primary);">
-                        <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Evento Atual</span> <h3 id="metaGame" style="font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem; color: #fff;"></h3></div>
-                        <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Prize Pool</span> <h3 id="metaPrize" style="color: var(--primary); font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem;"></h3></div>
-                        <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Inscritos</span> <h3 style="color: #fff; font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem;"><span id="teamCount">0</span> TEAMS</h3></div>
-                    </div>
-                    <h2>ROSTERS CONFIRMADOS</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;" id="teamsDisplay"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Leaderboard -->
-        <div id="classificacao" class="tab-content" style="position: relative;">
-            <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaStats', 'Leaderboard')" style="position: absolute; right: 0; top: -70px; width: 180px; font-size: 1rem; padding: 10px;">EXPORTAR PDF</button>
-            <div class="card" id="exportAreaStats">
-                <h2>RANKING GERAL</h2>
-                <table>
-                    <thead>
-                        <tr><th>Seed</th><th>Organização</th><th>Pontos Totais</th><th>Vitórias</th><th>Kills</th></tr>
-                    </thead>
-                    <tbody id="leaderboardBody"></tbody>
-                </table>
                 
-                <h2 style="margin-top: 50px;">TOP FRAGGERS (MVP)</h2>
-                <table>
-                    <thead><tr><th>Rank</th><th>Jogador</th><th>Equipe</th><th>Kills</th></tr></thead>
-                    <tbody id="playersLeaderboardBody"></tbody>
-                </table>
-            </div>
-        </div>
+                <div id="appHeaderLogoContainer"></div>
+                <h1 id="appHeaderTitle">NORT CAMP PRO SERIES</h1>
+                
+                <div id="modeIndicator" class="mode-badge mode-publico" style="margin-top: 15px;">ESPECTADOR</div>
+                
+                <div class="header-buttons">
+                    <button class="auth-btn admin-only" onclick="copiarLinkEspectador()" style="border-color: var(--primary); color: var(--primary);">LINK ESPECTADOR</button>
+                    <button class="auth-btn" onclick="openLoginModal()" id="loginBtn">ADMIN</button>
+                    <button class="auth-btn admin-only" onclick="logoutAdmin()" style="border-color: var(--accent); color: var(--accent);">SAIR</button>
+                </div>
+            </header>
 
-        <!-- Bracket -->
-        <div id="fase-mata" class="tab-content" style="position: relative;">
-            <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaBracket', 'Chaveamento')" style="position: absolute; right: 0; top: -70px; width: 180px; font-size: 1rem; padding: 10px;">EXPORTAR PDF</button>
-            <div class="card admin-only">
-                <h2>GERENCIAMENTO DE CHAVES</h2>
-                <div style="display: flex; gap: 15px; align-items: flex-end;">
-                    <div style="flex: 1;">
-                        <label>Formato do Bracket</label>
-                        <select id="bracketSize">
-                            <option value="16">Oitavas (16 Equipes / 12 c/ BYE)</option>
-                            <option value="8">Quartas (8 Equipes)</option>
-                            <option value="4">Semifinais (4 Equipes)</option>
-                        </select>
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-cadastro" onclick="switchTab('cadastro')">Equipes</button>
+                <button class="tab-btn" id="tab-classificacao" onclick="switchTab('classificacao')">Leaderboard</button>
+                <button class="tab-btn" id="tab-fase-mata" onclick="switchTab('fase-mata')">Chaves</button>
+                <button class="tab-btn" id="tab-historico" onclick="switchTab('historico')">Histórico</button>
+            </div>
+
+            <!-- Tela Equipes -->
+            <div id="cadastro" class="tab-content active">
+                <div class="grid-cadastro" id="cadastroGrid" style="grid-template-columns: 1fr;">
+                    <div class="admin-only">
+                        <div class="card">
+                            <h2>CONFIGURAÇÕES GERAIS</h2>
+                            <div class="form-group"><label>Título do Evento</label><input type="text" id="gameTitle" onchange="updateEventMeta()"></div>
+                            <div class="form-group"><label>Premiação (Prize Pool)</label><input type="text" id="prizePool" onchange="updateEventMeta()"></div>
+                            <div class="form-group">
+                                <label>Logo do Campeonato (Arquivo Local)</label>
+                                <input type="file" id="editCampLogoFile" accept="image/*" onchange="updateEventLogo(this)">
+                            </div>
+                            
+                            <div style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                                <button class="btn-submit btn-gold" onclick="finalizarCampeonato()">FINALIZAR EVENTO (ARQUIVAR)</button>
+                                <button class="btn-submit btn-danger" onclick="apagarCampeonato()" style="margin-top: 15px;">EXCLUIR EVENTO</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>REGISTRAR EQUIPE</h2>
+                            <div class="form-group"><label>Organização (TAG)</label><input type="text" id="teamName"></div>
+                            <div class="form-group">
+                                <label>Logo da Equipe (Arquivo Local)</label>
+                                <input type="file" id="teamLogoFile" accept="image/png, image/jpeg, image/jpg">
+                            </div>
+                            <button class="btn-submit" onclick="saveTeamMock()">ADICIONAR ROSTER</button>
+                        </div>
                     </div>
-                    <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 15px 30px; margin: 0;">GERAR BRACKET</button>
+
+                    <div>
+                        <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); border-left: 4px solid var(--primary);">
+                            <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Evento Atual</span> <h3 id="metaGame" style="font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem; color: #fff;"></h3></div>
+                            <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Prize Pool</span> <h3 id="metaPrize" style="color: var(--primary); font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem;"></h3></div>
+                            <div><span style="color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing:1px;">Inscritos</span> <h3 style="color: #fff; font-family: 'Rajdhani'; font-weight:700; font-size: 1.6rem;"><span id="teamCount">0</span> TEAMS</h3></div>
+                        </div>
+                        <h2>ROSTERS CONFIRMADOS</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;" id="teamsDisplay"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="card" id="exportAreaBracket" style="background: rgba(10,15,25,0.8);">
-                <h2>PLAYOFFS</h2>
-                <div class="bracket-wrapper" id="bracketContainer"></div>
+            <!-- Leaderboard -->
+            <div id="classificacao" class="tab-content" style="position: relative;">
+                <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaStats', 'Leaderboard')" style="position: absolute; right: 0; top: -70px; width: 180px; font-size: 1rem; padding: 10px;">EXPORTAR PDF</button>
+                <div class="card" id="exportAreaStats">
+                    <h2>RANKING GERAL</h2>
+                    <table>
+                        <thead>
+                            <tr><th>Seed</th><th>Organização</th><th>Pontos Totais</th><th>Vitórias</th><th>Kills</th></tr>
+                        </thead>
+                        <tbody id="leaderboardBody"></tbody>
+                    </table>
+                    
+                    <h2 style="margin-top: 50px;">TOP FRAGGERS (MVP)</h2>
+                    <table>
+                        <thead><tr><th>Rank</th><th>Jogador</th><th>Equipe</th><th>Kills</th></tr></thead>
+                        <tbody id="playersLeaderboardBody"></tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <!-- Histórico -->
-        <div id="historico" class="tab-content">
-            <div class="card">
-                <h2>EVENTOS PASSADOS</h2>
-                <div id="historyContainer"></div>
+            <!-- Bracket -->
+            <div id="fase-mata" class="tab-content" style="position: relative;">
+                <button class="btn-submit admin-only" onclick="exportToPDF('exportAreaBracket', 'Chaveamento')" style="position: absolute; right: 0; top: -70px; width: 180px; font-size: 1rem; padding: 10px;">EXPORTAR PDF</button>
+                <div class="card admin-only">
+                    <h2>GERENCIAMENTO DE CHAVES</h2>
+                    <div style="display: flex; gap: 15px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <label>Formato do Bracket</label>
+                            <select id="bracketSize">
+                                <option value="16">Oitavas (16 Equipes / 12 c/ BYE)</option>
+                                <option value="8">Quartas (8 Equipes)</option>
+                                <option value="4">Semifinais (4 Equipes)</option>
+                            </select>
+                        </div>
+                        <button class="btn-submit" onclick="buildTournamentTree()" style="width: auto; padding: 15px 30px; margin: 0;">GERAR BRACKET</button>
+                    </div>
+                </div>
+
+                <div class="card" id="exportAreaBracket" style="background: rgba(10,15,25,0.8);">
+                    <h2>PLAYOFFS</h2>
+                    <div class="bracket-wrapper" id="bracketContainer"></div>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div id="historico" class="tab-content">
+                <div class="card">
+                    <h2>EVENTOS PASSADOS</h2>
+                    <div id="historyContainer"></div>
+                </div>
             </div>
         </div>
     </div>
     
     <!-- MODAIS DE DIÁLOGO -->
 
-    <!-- Modal Criar Campeonato -->
     <div id="createTournamentModal" class="modal-overlay">
         <div class="modal-content">
             <h2>NOVO EVENTO</h2>
@@ -692,7 +905,6 @@
         </div>
     </div>
 
-    <!-- Modal Campeão -->
     <div id="championModal" class="modal-overlay">
         <div style="width: 100%; max-width: 800px; text-align: center;">
             <p style="color: var(--primary); font-family: 'Rajdhani'; font-size: 1.5rem; font-weight:600; letter-spacing: 5px;">TORNEIO ENCERRADO</p>
@@ -703,7 +915,6 @@
         </div>
     </div>
 
-    <!-- Modal Login Admin -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; gap: 15px; margin-bottom: 30px;">
@@ -722,7 +933,6 @@
         </div>
     </div>
 
-    <!-- Modal Jogadores -->
     <div id="playerModal" class="modal-overlay">
         <div class="modal-content">
             <h2 id="playerModalTitle" style="color: #fff; border:none; margin-bottom:20px;">GERENCIAR ELENCO</h2>
@@ -736,7 +946,6 @@
         </div>
     </div>
 
-    <!-- Modal Placar da Partida -->
     <div id="matchModalOverlay" class="modal-overlay">
         <div class="modal-content" style="max-width: 800px;">
             <h2 style="color: #fff; border:none;">REGISTRO DE PARTIDA</h2>
@@ -768,7 +977,7 @@
         </div>
     </div>
 
-    <!-- INÍCIO DO JAVASCRIPT (Lógica inalterada, mantendo o funcionamento) -->
+    <!-- JAVASCRIPT -->
     <script>
         const MS_IN_DAY = 24 * 60 * 60 * 1000;
         
@@ -790,6 +999,8 @@
                 
                 if (target) {
                     APP_STATE = target;
+                    document.getElementById('landingView').style.display = 'none';
+                    document.getElementById('appContainerWrapper').style.display = 'block';
                     document.getElementById('lobbyView').style.display = 'none';
                     document.getElementById('appView').style.display = 'block';
                     initApp();
@@ -798,11 +1009,18 @@
                     window.location.href = window.location.pathname;
                 }
             } else {
-                document.getElementById('lobbyView').style.display = 'block';
-                document.getElementById('appView').style.display = 'none';
-                renderLobby();
+                document.getElementById('landingView').style.display = 'block';
+                document.getElementById('appContainerWrapper').style.display = 'none';
             }
         };
+
+        function showLobbyView() {
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('appContainerWrapper').style.display = 'block';
+            document.getElementById('lobbyView').style.display = 'block';
+            document.getElementById('appView').style.display = 'none';
+            renderLobby();
+        }
 
         function saveState() { 
             if(APP_STATE && APP_STATE.id) {
